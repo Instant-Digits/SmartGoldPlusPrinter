@@ -12,7 +12,7 @@ for venv
 
 
 install the packegs for printer
-    sudo pip install Pillow python-printer-escpos
+    sudo pip install Pillow python-printer-escpos pyqrcode png
 
 for firebase
     sudo pip install pyrebase firebase
