@@ -12,7 +12,7 @@ for venv
 
 
 install the packegs for printer
-    sudo pip install Pillow python-printer-escpos pyqrcode png
+    sudo pip install Pillow python-printer-escpos
 
 for firebase
     sudo pip install pyrebase firebase
@@ -28,4 +28,11 @@ Adding to Auto start
     if in venv
         cd /home/printer && sudo python3 systemStart.py
 
-printer config https://pythonhosted.org/python-printer-escpos/manual/connections/usb.html
+Installing Printers 
+    https://www.youtube.com/watch?v=jK3rFKajb_Q
+    sudo apt-get install cups -y
+    sudo usermod -a -G lpadmin pi    /// user name
+    sudo cupsctl --remote-admin --remote-any --share-printers
+    sudo /etc/init.d/cups restart
+    ifconfig
+    visit localhost:631

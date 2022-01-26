@@ -1,9 +1,10 @@
 from firebase import Firebase
-from functions import configPrinters
+from functions import configPrinter
 from uuid import getnode as get_mac
 from dotMatrixPrinter import setDotMatrixPrinting
 from thermalPrinter import setThermalPrinting
 from labelPrinter import setLabelPrinting
+import requests 
 import time
 
 config = {
@@ -18,6 +19,15 @@ db = firebasecon.database()
 printers={}
 
 print ('System start')
+while True:
+    try:
+        requests.get('https://www.google.com/').status_code
+        break
+    except:
+        time.sleep(5)
+        print ('Waiting for internet')
+        pass
+
 
 mac = get_mac()
 print ('Mac : '+str(mac))
@@ -28,62 +38,71 @@ except TypeError:
         print ('Invalued config')
 
 
-def configurate ():
-    global metaData, printers
-    printers={}    
-    print('searching for printers')
 
-    while (True):
-        printers = configPrinters(metaData)
-        if(printers):
-            break
-        time.sleep(1)
-    print('Configuration Success')
-   
-configurate()
-
-if ('thermalPrinter' in printers):
+if ('thermalPrinter' in metaData['config']):
+    thermalPrinter = False
     def listener(message):
+        global thermalPrinter
         data=message["data"]        
-        if(data and len(printers)>0):            
+        if(data and thermalPrinter):
+            #setThermalPrinting(thermalPrinter,metaData,data)            
             try :
-                setThermalPrinting(printers['thermalPrinter'],metaData,data)                
+                setThermalPrinting(thermalPrinter,metaData,data)                
             except :
                 print('printer error')
-                configurate()
-                setThermalPrinting(printers['thermalPrinter'],metaData,data)
+                thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 4)
+                if(thermalPrinter):
+                    setThermalPrinting(thermalPrinter,metaData,data)
+                
             db.child(metaData['firmID']+'/thermalPrint').remove()
+
+        elif not (thermalPrinter):
+            thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 4)
 
     db.child(metaData['firmID']+'/thermalPrint').stream(listener)
 
-if ('labelPrinter' in printers):
-    def listener(message):
-        data=message["data"]        
-        if(data and len(printers)>0):
-            #setLabelPrinting(printers['labelPrinter'],metaData,data)            
+
+if ('labelPrinter' in metaData['config']):
+    labelPrinter = False
+    def listener(message):        
+        global labelPrinter
+        data=message["data"]       
+        if(data and labelPrinter):
             try :
-                setLabelPrinting(printers['labelPrinter'],metaData,data)                
+                setLabelPrinting(labelPrinter,metaData,data)                
             except :
                 print('printer error')
-                configurate()
-                setLabelPrinting(printers['labelPrinter'],metaData,data)
+                labelPrinter = configPrinter(metaData['config']['labelPrinter'], 'labelPrinter', 4)
+                if (labelPrinter):
+                    setLabelPrinting(labelPrinter,metaData,data)
+
             db.child(metaData['firmID']+'/labelPrinter').remove()
+
+        elif not (labelPrinter):
+            labelPrinter = configPrinter(metaData['config']['labelPrinter'], 'labelPrinter', 4)
 
     db.child(metaData['firmID']+'/labelPrinter').stream(listener)
 
 
-if ('formPrinter' in printers):
+if ('formPrinter' in metaData['config']):
+    formPrinter = False
     def listener(message):
+        global formPrinter
         data=message["data"]        
-        if(data and len(printers)>0):  
-            #setDotMatrixPrinting(printers['formPrinter'],metaData,data)          
+        if(data and formPrinter):  
             try :
-                setDotMatrixPrinting(printers['formPrinter'],metaData,data)
-                db.child(metaData['firmID']+'/formPrint').remove()
+                setDotMatrixPrinting(formPrinter,metaData,data)
+                
             except :
                 print('printer error')
-                configurate()
-                setDotMatrixPrinting(printers['formPrinter'],metaData,data)
+                formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 4)
+                if (formPrinter):
+                    setDotMatrixPrinting(formPrinter,metaData,data)
+
+            db.child(metaData['firmID']+'/formPrint').remove()
+
+        elif not (formPrinter):
+            formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 4)
             
     db.child(metaData['firmID']+'/formPrint').stream(listener)
 

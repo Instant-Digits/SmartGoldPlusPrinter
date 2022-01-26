@@ -41,7 +41,7 @@ def setThermalPrinting(printer,  printingHeader,printData):
     else: 
         for (key, value) in printData['itemList'].items():
             printer.align('left');
-            printer.text(value['make']+' '+value['item'] );
+            printer.text(value['label'] );
             printer.lf();
             printer.align('right')
             printer.text ("{:<1} {:<20} {right_aligned:>15}".format(' ', 
