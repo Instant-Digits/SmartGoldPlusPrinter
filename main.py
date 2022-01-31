@@ -43,21 +43,22 @@ if ('thermalPrinter' in metaData['config']):
     thermalPrinter = False
     def listener(message):
         global thermalPrinter
-        data=message["data"]        
+        data=message["data"]
+        if not (thermalPrinter):
+            thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 1)        
         if(data and thermalPrinter):
             #setThermalPrinting(thermalPrinter,metaData,data)            
             try :
                 setThermalPrinting(thermalPrinter,metaData,data)                
             except :
                 print('printer error')
-                thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 4)
+                thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 1)
                 if(thermalPrinter):
                     setThermalPrinting(thermalPrinter,metaData,data)
                 
             db.child(metaData['firmID']+'/thermalPrint').remove()
 
-        elif not (thermalPrinter):
-            thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 4)
+
 
     db.child(metaData['firmID']+'/thermalPrint').stream(listener)
 
@@ -66,20 +67,19 @@ if ('labelPrinter' in metaData['config']):
     labelPrinter = False
     def listener(message):        
         global labelPrinter
-        data=message["data"]       
+        data=message["data"]
+        if not (labelPrinter):
+            labelPrinter = configPrinter(metaData['config']['labelPrinter'], 'labelPrinter', 1)       
         if(data and labelPrinter):
             try :
                 setLabelPrinting(labelPrinter,metaData,data)                
             except :
                 print('printer error')
-                labelPrinter = configPrinter(metaData['config']['labelPrinter'], 'labelPrinter', 4)
+                labelPrinter = configPrinter(metaData['config']['labelPrinter'], 'labelPrinter', 1)
                 if (labelPrinter):
                     setLabelPrinting(labelPrinter,metaData,data)
 
             db.child(metaData['firmID']+'/labelPrinter').remove()
-
-        elif not (labelPrinter):
-            labelPrinter = configPrinter(metaData['config']['labelPrinter'], 'labelPrinter', 4)
 
     db.child(metaData['firmID']+'/labelPrinter').stream(listener)
 
@@ -88,21 +88,21 @@ if ('formPrinter' in metaData['config']):
     formPrinter = False
     def listener(message):
         global formPrinter
-        data=message["data"]        
+        data=message["data"] 
+        if not (formPrinter):
+            formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)       
         if(data and formPrinter):  
             try :
                 setDotMatrixPrinting(formPrinter,metaData,data)
                 
             except :
                 print('printer error')
-                formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 4)
+                formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)
                 if (formPrinter):
                     setDotMatrixPrinting(formPrinter,metaData,data)
 
             db.child(metaData['firmID']+'/formPrint').remove()
 
-        elif not (formPrinter):
-            formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 4)
             
     db.child(metaData['firmID']+'/formPrint').stream(listener)
 
