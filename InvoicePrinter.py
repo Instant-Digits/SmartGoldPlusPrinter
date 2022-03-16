@@ -31,11 +31,11 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
     can.drawString(440, 720, "No. : "+printData['invoiceSN'])
     # can.drawString(430, 4, ": "+printData['invoiceSN'])
 
-    can.drawString(70, 646, "NAME  : "+printData['name'].upper())
+    can.drawString(70, 654, "NAME  : "+printData['name'].upper())
 
-    can.drawString(255, 646, "PHONE  : "+cusPhone)
+    can.drawString(255, 654, "PHONE  : "+cusPhone)
 
-    can.drawRightString(520, 646, "NIC  : "+printData['nameNIC'])
+    can.drawRightString(520, 654, "NIC  : "+printData['nameNIC'])
 
     can.setFont("Helvetica", 11)
     
@@ -69,9 +69,9 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
         can.setFont("Helvetica", 10)
         i=0
         for (key, value) in printData['itemList'].items():
-            y=600-i*15
+            y=610-i*15
             i=i+1
-            can.drawString(63, y, "{:^12}".format( str(i)))
+            can.drawString(62, y, "{:^12}".format( str(i)))
             can.drawString(105, y, value['label'].upper() )#80
             can.drawString(360, y, "{:^18}".format( str(value['weight'])+'g'))
             if (printValue):
@@ -81,45 +81,44 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
 
         if (printData['purchase']):
             can.setFont("Helvetica-Bold", 10)
-            y= 520
+            y= 525
             if (i!=0 and printValue):
                 i=0
-                can.drawString(360, y-i*15, "{:<18}".format( 'TOTAL'))
-                can.drawRightString(530, y-i*15,currencyFormater(float(printData['total']))+'0')
+                can.drawString(360, y-i*13, "{:<18}".format( 'TOTAL'))
+                can.drawRightString(530, y-i*13,currencyFormater(float(printData['total']))+'0')
             i=0
             
             
             i=i+1
-            can.drawString(105, y-i*15, 'PAYMENTS' )
+            can.drawString(105, y-i*13, 'PAYMENTS' )
 
             i=i+1
 
             can.setFont("Helvetica", 10)
             
-            can.drawString(105, y-i*15, printData['payMethod1'].upper() +' (' +printData['purchase']+')')#80
-            #can.drawString(360, y-i*15, "{:^18}".format( str(value['weight'])+'g'))
+            can.drawString(105, y-i*13, printData['payMethod1'].upper() +' (' +printData['purchase']+')')#80
+            #can.drawString(360, y-i*13, "{:^18}".format( str(value['weight'])+'g'))
             if(printValue):
-                can.drawRightString(530, y-i*15, '('+ currencyFormater(float(printData['payAmount'])-float(printData['payMethod2Amount']))+'0)')
+                can.drawRightString(530, y-i*13, '('+ currencyFormater(float(printData['payAmount'])-float(printData['payMethod2Amount']))+'0)')
 
 
             i=i+1
-            can.drawString(105, y-i*15, printData['payMethod2'].upper() )#80
-            #can.drawString(360, y-i*15, "{:^18}".format( str(value['weight'])+'g'))
+            can.drawString(105, y-i*13, printData['payMethod2'].upper() )#80
+            #can.drawString(360, y-i*13, "{:^18}".format( str(value['weight'])+'g'))
             if(printValue):
-                can.drawRightString(530, y-i*15, '('+ currencyFormater(float(printData['payMethod2Amount']))+'0)')
+                can.drawRightString(530, y-i*13, '('+ currencyFormater(float(printData['payMethod2Amount']))+'0)')
 
-            can.setFont("Helvetica-Bold", 12)
-            can.drawRightString(520, 444, 'Rs. '+currencyFormater(float(printData['balance']))+'0')
+           
 
         else :             
             can.setFont("Helvetica-Bold", 10)
-            can.drawString(360, 495, "{:<18}".format( 'TOTAL'))
-            can.drawRightString(530,495,currencyFormater(float(printData['total']))+'0')
-            can.drawString(360, 480, "{:<18}".format( 'PAID'))
-            can.drawRightString(530, 480,'('+currencyFormater(float(printData['payAmount']))+'0)')
+            can.drawString(360, 503, "{:<18}".format( 'TOTAL'))
+            can.drawRightString(530,503,currencyFormater(float(printData['total']))+'0')
+            can.drawString(360, 488, "{:<18}".format( 'PAID'))
+            can.drawRightString(530, 488,'('+currencyFormater(float(printData['payAmount']))+'0)')
 
-            can.setFont("Helvetica-Bold", 12)
-            can.drawRightString(520, 444, 'Rs. '+currencyFormater(float(printData['balance']))+'0')
+        can.setFont("Helvetica-Bold", 12)
+        can.drawRightString(525, 460, 'Rs. '+currencyFormater(float(printData['balance']))+'0')
 
 
         
