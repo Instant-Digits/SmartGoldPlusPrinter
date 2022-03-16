@@ -1,11 +1,21 @@
-from firebase import Firebase
-from functions import configPrinter
+import os
+try :
+    from firebase import Firebase
+except :
+    os.system('sudo pip3 install pyrebase firebase')
+    from firebase import Firebase
+    print('Firebase Installed Again')
+
 from uuid import getnode as get_mac
+import requests 
+import time
+from functions import configPrinter
 from dotMatrixPrinter import setDotMatrixPrinting
 from thermalPrinter import setThermalPrinting
 from labelPrinter import setLabelPrinting
-import requests 
-import time
+from InvoicePrinter import setPDFInvoicePrinter
+from wifiCheck import waitForInternet
+
 
 config = {
         "apiKey": "AIzaSyAHiNXjCfRz_aQefCYoFglXo4ramCMcyIE",
@@ -19,14 +29,8 @@ db = firebasecon.database()
 printers={}
 
 print ('System start')
-while True:
-    try:
-        requests.get('https://www.google.com/').status_code
-        break
-    except:
-        time.sleep(5)
-        print ('Waiting for internet')
-        pass
+
+waitForInternet(4)
 
 
 mac = get_mac()
@@ -63,7 +67,7 @@ if ('thermalPrinter' in metaData['config']):
     db.child(metaData['firmID']+'/thermalPrint').stream(listener)
 
 
-if ('labelPrinter' in metaData['config']):
+if ('labelPrinterr' in metaData['config']):
     labelPrinter = False
     def listener(message):        
         global labelPrinter
@@ -84,25 +88,25 @@ if ('labelPrinter' in metaData['config']):
     db.child(metaData['firmID']+'/labelPrinter').stream(listener)
 
 
-if ('formPrinter' in metaData['config']):
+if  ('invoicePrinter' in metaData['config']):
     formPrinter = False
     def listener(message):
         global formPrinter
         data=message["data"] 
-        if not (formPrinter):
-            formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)       
-        if(data and formPrinter):  
+        # if not (formPrinter):
+        #     formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)       
+        if(data):  
             try :
-                setDotMatrixPrinting(formPrinter,metaData,data)
+                setPDFInvoicePrinter('invoicePrinter','metaData',data)
                 
             except :
                 print('printer error')
-                formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)
-                if (formPrinter):
-                    setDotMatrixPrinting(formPrinter,metaData,data)
+                # formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)
+                # if (formPrinter):
+                #     setDotMatrixPrinting(formPrinter,metaData,data)
 
-            db.child(metaData['firmID']+'/formPrint').remove()
+            #db.child(metaData['firmID']+'/formPrint').remove()
 
             
-    db.child(metaData['firmID']+'/formPrint').stream(listener)
+    db.child(metaData['firmID']+'/invoicePrint').stream(listener)
 

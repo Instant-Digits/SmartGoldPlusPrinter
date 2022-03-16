@@ -1,4 +1,11 @@
-from firebase import Firebase
+import os
+try :
+    from firebase import Firebase
+except :
+    os.system('sudo pip3 install pyrebase firebase')
+    from firebase import Firebase
+    print('Firebase Installed Again')
+
 from functions import configPrinter
 from uuid import getnode as get_mac
 from dotMatrixPrinter import setDotMatrixPrinting
