@@ -1,7 +1,9 @@
 import os
+from wifiCheck import waitForInternet
 try :
     from firebase import Firebase
 except :
+    waitForInternet(4)
     os.system('sudo pip3 install pyrebase firebase')
     from firebase import Firebase
     print('Firebase Installed Again')
@@ -14,7 +16,7 @@ from dotMatrixPrinter import setDotMatrixPrinting
 from thermalPrinter import setThermalPrinting
 from labelPrinter import setLabelPrinting
 from InvoicePrinter import setPDFInvoicePrinter
-from wifiCheck import waitForInternet
+
 
 
 config = {
@@ -67,7 +69,7 @@ if ('thermalPrinter' in metaData['config']):
     db.child(metaData['firmID']+'/thermalPrint').stream(listener)
 
 
-if ('labelPrinterr' in metaData['config']):
+if ('labelPrinter' in metaData['config']):
     labelPrinter = False
     def listener(message):        
         global labelPrinter
