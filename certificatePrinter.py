@@ -24,33 +24,33 @@ def SetPrintingJobCertificate(printData):
 
    
 
-    can.drawString(70, 664, "Name")
-    can.drawString(115, 664, ": "+printData['name'])
+    can.drawString(70, 674, "Name")
+    can.drawString(115, 674, ": "+printData['name'])
 
-    can.drawString(255, 664, "Date")
-    can.drawString(295, 664, ": "+printData['date'])
-
-
-    can.drawString(440, 664, "Time")
-    can.drawString(475, 664, ": "+printData['time'])
-
-    can.drawString(70, 648, "Sample")
-    can.drawString(115, 648, ": "+printData['sample'])
+    can.drawString(255, 674, "Date")
+    can.drawString(295, 674, ": "+printData['date'])
 
 
-    can.drawString(255, 648, "Weight")
-    can.drawString(295, 648, ": "+printData['weight']+'g')
+    can.drawString(440, 674, "Time")
+    can.drawString(475, 674, ": "+printData['time'])
+
+    can.drawString(70, 657, "Sample")
+    can.drawString(115, 657, ": "+printData['sample'])
+
+
+    can.drawString(255, 658, "Weight")
+    can.drawString(295, 657, ": "+printData['weight']+'g')
 
 
 
-    can.drawString(440, 648, "Karat")
-    can.drawString(475, 648, ": "+printData['karad']+'K')
+    can.drawString(440, 657, "Karat")
+    can.drawString(475, 657, ": "+printData['karad']+'K')
 
 
     can.setFont("Helvetica", 12)
     i=0
     for (key, value) in dict.items():
-        y=580-i*20
+        y=590-i*20
         i=i+1
         can.drawString(80, y, "{:^12}".format( str(i)))
         can.drawString(140, y, key )#80
