@@ -1,6 +1,5 @@
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import io
-import os
 from functions import currencyFormater
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter

@@ -7,10 +7,15 @@ import png
 from PIL import Image, ImageDraw, ImageFont
 
 
-printer = getUSBPrinter()(idVendor=0x0483,  # USB vendor and product Ids for Bixolon SRP-350plus
-                        idProduct=0x5743,  # printer
-                        inputEndPoint=0x82,
+printer = getUSBPrinter()(idVendor=0x1203,  # USB vendor and product Ids for Bixolon SRP-350plus
+                        idProduct=0x0170,  # printer
+                        inputEndPoint=0x82, #  lsusb -vvv -d 1203:0170 | grep bEndpointAddress | grep IN
                         outputEndPoint=0x01)
+
+                        # (idVendor=0x0483,  # USB vendor and product Ids for Bixolon SRP-350plus
+                        # idProduct=0x5743,  # printer
+                        # inputEndPoint=0x82,
+                        # outputEndPoint=0x01)
 
 
 
@@ -52,15 +57,21 @@ def generateQRCode (code, data):
     return "./qr.png"
 
 printer.align('center')
-printer.text('\x1dV\x00')
+printer.lf()
 printer.image(generateQRCode ('000072', ['PRIYANKA JEWELS', 'W :10.3g, S.P 101%', 'Gold chain box']))
-printer.text('\x1dV\x00')
+printer.lf()
+printer.lf()
 printer.image(generateQRCode ('000072', ['PRIYANKA JEWELS', 'W :10.3g, S.P 101%', 'Gold chain box']))
-printer.text('\x1dV\x00')
-printer.image(generateQRCode ('000072', ['PRIYANKA JEWELS', 'W :10.3g, S.P 101%', 'Gold chain box']))
-printer.text('\x1dV\x00')
-printer.image(generateQRCode ('000072', ['PRIYANKA JEWELS', 'W :10.3g, S.P 101%', 'Gold chain box']))
-printer.text('\x1dV\x00')
+
+#printer.text("\0".encode())
+
+# printer.feed(2)
+# printer.image(generateQRCode ('000072', ['PRIYANKA JEWELS', 'W :10.3g, S.P 101%', 'Gold chain box']))
+# printer.text('\x1dV\x00')
+# printer.image(generateQRCode ('000072', ['PRIYANKA JEWELS', 'W :10.3g, S.P 101%', 'Gold chain box']))
+# printer.text('\x1dV\x00')
+# printer.image(generateQRCode ('000072', ['PRIYANKA JEWELS', 'W :10.3g, S.P 101%', 'Gold chain box']))
+# printer.text('\x1dV\x00')
 
 # printer.lf()
 # printer.lf()

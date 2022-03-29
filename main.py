@@ -8,6 +8,7 @@ except :
     from firebase import Firebase
     print('Firebase Installed Again')
 
+from certificatePrinter import SetPrintingJobCertificate
 from uuid import getnode as get_mac
 import requests 
 import time
@@ -112,3 +113,18 @@ if  ('invoicePrinter' in metaData['config']):
             
     db.child(metaData['firmID']+'/invoicePrint').stream(listener)
 
+
+
+if ('certificatePrinter' in metaData['config']):
+    def listener(message):
+        data=message["data"]        
+        if(data):  
+            #setDotMatrixPrinting(printers['formPrinter'],metaData,data)          
+            try :
+                SetPrintingJobCertificate(data)
+                
+            except :
+                print('printer error')
+            #db.child(metaData['firmID']+'/certificatePrinter').remove() 
+            
+    db.child(metaData['firmID']+'/certificatePrinter').stream(listener)
