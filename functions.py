@@ -49,3 +49,5 @@ def configPrinter (printerInfo, name='Printer', timeOut=5):
             
         
 
+def nameDecode (str1):
+    return (str1 or '').replace('&&','.')

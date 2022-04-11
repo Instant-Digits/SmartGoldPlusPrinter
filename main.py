@@ -9,6 +9,9 @@ except :
     print('Firebase Installed Again')
 
 from certificatePrinter import SetPrintingJobCertificate
+
+
+from stockPrinter import SetPrintingJobStock
 from uuid import getnode as get_mac
 import requests 
 import time
@@ -128,3 +131,19 @@ if ('certificatePrinter' in metaData['config']):
             #db.child(metaData['firmID']+'/certificatePrinter').remove() 
             
     db.child(metaData['firmID']+'/certificatePrinter').stream(listener)
+
+
+
+
+if ('stockPrinter' in metaData['config']):
+    def listener(message):
+        data=message["data"]        
+        if(data):  
+            try:
+                SetPrintingJobStock(data)
+                
+            except :
+                print('printer error')
+            #db.child(metaData['firmID']+'/certificatePrinter').remove() 
+            
+    db.child(metaData['firmID']+'/stockPrinter').stream(listener)
