@@ -85,7 +85,7 @@ def SetPrintingJobStock(printData):
 
     can.save()
 
-    #os.system('lp ./destination.pdf')
+    #os.system('lp ./stockPDF.pdf')
 
 
 #SetPrintingJobCertificate('')

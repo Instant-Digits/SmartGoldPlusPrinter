@@ -22,7 +22,7 @@ def SetPrintingJobCertificate(printData):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
 
-   
+    can.setFont("Helvetica-Bold", 11)
 
     can.drawString(70, 674, "Name")
     can.drawString(115, 674, ": "+printData['name'])
@@ -47,7 +47,7 @@ def SetPrintingJobCertificate(printData):
     can.drawString(475, 657, ": "+printData['karad']+'K')
 
 
-    can.setFont("Helvetica", 12)
+    can.setFont("Helvetica-Bold", 12)
     i=0
     for (key, value) in dict.items():
         y=590-i*20
