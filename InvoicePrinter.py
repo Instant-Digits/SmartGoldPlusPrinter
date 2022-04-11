@@ -3,6 +3,7 @@ import io
 from functions import currencyFormater
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+import os
 
 
 
@@ -144,7 +145,7 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
     outputStream = open("destination.pdf", "wb")
     output.write(outputStream)
     outputStream.close()
-    #os.system('lp ./destination.pdf')
+    os.system('lp ./destination.pdf')
 
 
 # from reportlab.pdfgen.canvas import Canvas

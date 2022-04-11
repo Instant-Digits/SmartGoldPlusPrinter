@@ -111,7 +111,7 @@ if  ('invoicePrinter' in metaData['config']):
                 # if (formPrinter):
                 #     setDotMatrixPrinting(formPrinter,metaData,data)
 
-            #db.child(metaData['firmID']+'/formPrint').remove()
+            db.child(metaData['firmID']+'/invoicePrint').remove()
 
             
     db.child(metaData['firmID']+'/invoicePrint').stream(listener)
@@ -128,7 +128,7 @@ if ('certificatePrinter' in metaData['config']):
                 
             except :
                 print('printer error')
-            #db.child(metaData['firmID']+'/certificatePrinter').remove() 
+            db.child(metaData['firmID']+'/certificatePrinter').remove() 
             
     db.child(metaData['firmID']+'/certificatePrinter').stream(listener)
 
@@ -144,6 +144,6 @@ if ('stockPrinter' in metaData['config']):
                 
             except :
                 print('printer error')
-            #db.child(metaData['firmID']+'/certificatePrinter').remove() 
+            db.child(metaData['firmID']+'/stockPrinter').remove() 
             
     db.child(metaData['firmID']+'/stockPrinter').stream(listener)

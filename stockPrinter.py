@@ -80,12 +80,12 @@ def SetPrintingJobStock(printData):
 
                             can.drawString(100, y-l*lSpace, nameDecode(key3))
                             can.drawString(340, y-l*lSpace, ': '+ currencyFormater(value3['qts'])+'  || W : '+ currencyFormater(value3['weight'])+'g')        
-        
+                            l+=1
 
 
     can.save()
 
-    #os.system('lp ./stockPDF.pdf')
+    os.system('lp ./stockPDF.pdf')
 
 
 #SetPrintingJobCertificate('')
