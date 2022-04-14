@@ -25,7 +25,7 @@ def SetPrintingJobStock(printData):
 
     typeInv = printData['type'] if ('type' in printData and printData['type']) else '--'
 
-    can.drawString(60, y-l*lSpace,'Page No : '+str(page)+'    Type : '+typeInv+ "      Printed on : "+ printData['printedOn'])
+    can.drawString(60, y-l*lSpace,'PAGE NO : '+str(page)+'    CODE : '+printData['firmCode']+'    TYPE : '+typeInv+ "      Printed on : "+ printData['printedOn'])
     l+=1
     l+=1
 

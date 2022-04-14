@@ -48,6 +48,8 @@ except TypeError:
         print ('Invalued config')
 
 
+firmIds =metaData['firmID'].split('@')
+
 
 if ('thermalPrinter' in metaData['config']):
     thermalPrinter = False
@@ -66,11 +68,11 @@ if ('thermalPrinter' in metaData['config']):
                 if(thermalPrinter):
                     setThermalPrinting(thermalPrinter,metaData,data)
                 
-            db.child(metaData['firmID']+'/thermalPrint').remove()
+            db.child(firmIds[0]+'/thermalPrint').remove()
 
 
 
-    db.child(metaData['firmID']+'/thermalPrint').stream(listener)
+    db.child(firmIds[0]+'/thermalPrint').stream(listener)
 
 
 if ('labelPrinter' in metaData['config']):
@@ -89,9 +91,9 @@ if ('labelPrinter' in metaData['config']):
                 if (labelPrinter):
                     setLabelPrinting(labelPrinter,metaData,data)
 
-            db.child(metaData['firmID']+'/labelPrinter').remove()
+            db.child(firmIds[0]+'/labelPrinter').remove()
 
-    db.child(metaData['firmID']+'/labelPrinter').stream(listener)
+    db.child(firmIds[0]+'/labelPrinter').stream(listener)
 
 
 if  ('invoicePrinter' in metaData['config']):
@@ -111,10 +113,10 @@ if  ('invoicePrinter' in metaData['config']):
                 # if (formPrinter):
                 #     setDotMatrixPrinting(formPrinter,metaData,data)
 
-            db.child(metaData['firmID']+'/invoicePrint').remove()
+            db.child(firmIds[0]+'/invoicePrint').remove()
 
             
-    db.child(metaData['firmID']+'/invoicePrint').stream(listener)
+    db.child(firmIds[0]+'/invoicePrint').stream(listener)
 
 
 
@@ -128,9 +130,9 @@ if ('certificatePrinter' in metaData['config']):
                 
             except :
                 print('printer error')
-            db.child(metaData['firmID']+'/certificatePrinter').remove() 
+            db.child(firmIds[0]+'/certificatePrinter').remove() 
             
-    db.child(metaData['firmID']+'/certificatePrinter').stream(listener)
+    db.child(firmIds[0]+'/certificatePrinter').stream(listener)
 
 
 
@@ -144,6 +146,7 @@ if ('stockPrinter' in metaData['config']):
                 
             except :
                 print('printer error')
-            db.child(metaData['firmID']+'/stockPrinter').remove() 
-            
-    db.child(metaData['firmID']+'/stockPrinter').stream(listener)
+            db.child(data['firmID']+'/stockPrinter').remove() 
+    
+    for firmId in firmIds:
+        db.child(firmId+'/stockPrinter').stream(listener)

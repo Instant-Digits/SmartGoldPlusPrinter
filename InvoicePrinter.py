@@ -14,6 +14,8 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
     cusPhone = printData['namePhone'] if ('namePhone' in printData and printData['namePhone']) else '--'
     cusAdress =  printData['nameAddress'] if 'nameAddress' in printData else '--' 
 
+    
+
     printValue = printData['printValue'] if 'printValue' in printData else True 
 
     if int(printData['balance'])>0 :
@@ -71,9 +73,10 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
         for (key, value) in printData['itemList'].items():
             y=610-i*15
             i=i+1
+            karadUnit = 'K' if ('GOLD' in value['id'].upper()) else ''
             can.drawString(50, y, "{:^12}".format( str(i)))
             can.drawString(90, y, value['label'].upper() )#80
-            can.drawString(340, y, str(value['karad'])+'K' )
+            can.drawString(340, y, str(value['karad'])+karadUnit )
             can.drawString(380, y, "{:^18}".format( str(value['weight'])+'g'))
             if (printValue):
                 can.drawRightString(545, y,  currencyFormater(float(value['unitPrice'])*float(value['quantity']))+'0')
