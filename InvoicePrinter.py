@@ -122,7 +122,8 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
             can.drawRightString(545, 488,'('+currencyFormater(float(printData['payAmount']))+'0)')
 
         can.setFont("Helvetica-Bold", 12)
-        can.drawRightString(525, 460, 'Rs. '+currencyFormater(float(printData['balance']))+'0')
+        balPrefix = '- ' if float(printData['balance'])<0 else ''
+        can.drawRightString(525, 460, balPrefix+'Rs. '+currencyFormater(abs(float(printData['balance'])))+'0')
         
         can.setFont("Helvetica", 11)
         can.drawString(70, 460, "SOLD BY  : "+printData['issuedby'].upper())
