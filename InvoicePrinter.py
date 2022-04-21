@@ -14,9 +14,10 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
     cusPhone = printData['namePhone'] if ('namePhone' in printData and printData['namePhone']) else '--'
     cusAdress =  printData['nameAddress'] if 'nameAddress' in printData else '--' 
 
-    
+   
 
-    printValue = printData['hideValue']=='true' if 'hideValue' in printData else True 
+    printValue = not(printData['hideValue']) if 'hideValue' in printData else True 
+    
 
     if int(printData['balance'])>0 :
         invType = 'A/C'+' '+printData['type'] 
@@ -119,7 +120,7 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
             #can.drawString(360, y-i*13, "{:^18}".format( str(value['weight'])+'g'))
             
             can.drawRightString(545, y-i*13, '('+ currencyFormater(float(printData['balance']))+'0)')
-            print( y-i*13)
+          
            
 
         else :             
@@ -134,7 +135,7 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
         can.setFont("Helvetica-Bold", 12)
         balPrefix = '- ' if float(printData['balance'])<0 else ''
 
-        footerText = 'TOTAL' if printValue else printData['payMethod2'].upper()
+        footerText = 'TOTAL' if printValue else printData['payMethod2'].upper()+' BALANCE'
         can.drawRightString(425, 445, footerText)
 
         footerValue = printData['total'] if printValue else printData['payMethod2Amount']
