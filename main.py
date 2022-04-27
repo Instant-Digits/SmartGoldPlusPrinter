@@ -10,7 +10,7 @@ except :
 
 from certificatePrinter import SetPrintingJobCertificate
 
-
+from reportPrinter import SetPrintingJobReport
 from stockPrinter import SetPrintingJobStock
 from uuid import getnode as get_mac
 import requests 
@@ -118,7 +118,28 @@ if  ('invoicePrinter' in metaData['config']):
             
     db.child(firmIds[0]+'/invoicePrint').stream(listener)
 
+if  ('reportPrinter' in metaData['config']):
+    formPrinter = False
+    def listener(message):
+        global formPrinter
+        data=message["data"] 
+        # if not (formPrinter):
+        #     formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)       
+        if(data):  
+            try :
+            # print(data)
+                SetPrintingJobReport(data)
+                
+            except :
+                print('printer error')
+                # formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)
+                # if (formPrinter):
+                #     setDotMatrixPrinting(formPrinter,metaData,data)
 
+            db.child(firmIds[0]+'/reportPrinter').remove()
+
+            
+    db.child(firmIds[0]+'/reportPrinter').stream(listener)
 
 if ('certificatePrinter' in metaData['config']):
     def listener(message):
