@@ -11,6 +11,10 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
 
+    # pdf_file = 'Destination.pdf'
+ 
+    # can = canvas.Canvas(pdf_file)
+
     cusPhone = printData['namePhone'] if ('namePhone' in printData and printData['namePhone']) else '--'
     cusAdress =  printData['nameAddress'] if 'nameAddress' in printData else '--' 
 
@@ -26,19 +30,20 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
     else:
         invType =printData['type']
 
+    can.setFont("Helvetica", 10)
+
+    can.drawString(410, 828, "DATE")
+    can.drawString(450, 828, ": "+printData['date']+' '+ printData['time'][0:5] +' '+printData['time'][-2:])
+    
     can.setFont("Helvetica", 11)
-
-    can.drawString(410, 820, "DATE")
-    can.drawString(450, 820, ": "+printData['date']+' '+ printData['time'][0:5] +' '+printData['time'][-2:])
-
-    can.drawString(440, 710, "No. : "+printData['invoiceSN'])
+    can.drawString(55, 716, "No. : "+printData['invoiceSN'])
     # can.drawString(430, 4, ": "+printData['invoiceSN'])
 
-    can.drawString(70, 638, "NAME  : "+printData['name'].upper())
+    can.drawString(235, 716, "NAME  : "+printData['name'].upper())
 
-    can.drawString(255, 638, "PHONE  : "+cusPhone)
+    can.drawRightString(535, 716, "PHONE  : "+cusPhone)
 
-    can.drawRightString(520, 638, "NIC  : "+(printData['nameNIC'] or '--'))
+    #can.drawRightString(520, 638, "NIC  : "+(printData['nameNIC'] or '--'))
 
     can.setFont("Helvetica", 11)
     
@@ -55,24 +60,52 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
    
 
     if (printData['type']=='Paid'):
-        comment = "("+printData['comment']+')' if ('comment' in printData and  printData['comment'] and printData['comment']!='Nothing' ) else ' '
-        can.setFont("Helvetica", 13)
-        can.drawString(37, 460, "{:^12}".format( '1'))
-        can.drawString(80, 460, 'A PAYMENT RECEIVED-CONFIRMATION' )
-        can.drawString(340, 460,"{:^32}".format( printData['payMethod']))
-        can.drawRightString(570, 460, currencyFormater(printData['total'])+'.00')
-        can.setFont("Helvetica", 11)
-        can.drawString(80, 444, comment )
+        can.setFont("Helvetica-Bold", 11)
+         
+        can.drawString(58, 690, 'No.' )
+        can.drawString(176, 690, 'Description' )
+        # can.drawString(332, 690, 'Karat' )
+        can.drawString(390, 690, 'Method' )
+        can.drawString(465, 690, 'Amount (Rs)' )
 
-        can.setFont("Helvetica", 13)
-        can.drawRightString(565, 210, 'Rs. '+currencyFormater(float(printData['total']))+'0')
+        comment = "("+printData['comment']+')' if ('comment' in printData and  printData['comment'] and printData['comment']!='Nothing' ) else ' '
+        can.setFont("Helvetica", 11)
+        can.drawString(50, 665, "{:^12}".format( '1'))
+        can.drawString(90, 665, 'A PAYMENT RECEIVED-CONFIRMATION' )
+        can.drawString(370, 665,"{:^18}".format( printData['payMethod'].upper()))
+        can.drawRightString(545, 665, currencyFormater(printData['total'])+'.00')
+        can.setFont("Helvetica", 11)
+        can.drawString(90, 650, printData['paidForLabel'].upper() )
+        can.drawString(90, 630, comment )
+
+        can.setFont("Helvetica", 11)
+        can.drawString(55, 474, "ISSUED BY : "+printData['issuedby'].upper())
+
+        can.drawString(235, 474, "TYPE : PAYMENT")
+
+        can.setFont("Helvetica-Bold", 12)
+        
+        can.drawRightString(420, 474, 'TOTAL')
+
+        
+        can.drawRightString(540, 474, 'Rs. '+currencyFormater(abs(float(printData['total'])))+'0')
+
+        
         
 
     else :
+        can.setFont("Helvetica-Bold", 11)
+         
+        can.drawString(58, 690, 'No.' )
+        can.drawString(176, 690, 'Description' )
+        can.drawString(332, 690, 'Karat' )
+        can.drawString(390, 690, 'Weight' )
+        can.drawString(465, 690, 'Amount (Rs)' )
+
         can.setFont("Helvetica", 10)
         i=0
         for (key, value) in printData['itemList'].items():
-            y=595-i*14
+            y=670-i*14
             i=i+1
             karadUnit = 'K' if ('GOLD' in value['id'].upper()) else ''
             can.drawString(50, y, "{:^12}".format( str(i)))
@@ -88,7 +121,7 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
 
         if ('purchase' in printData and  printData['purchase']):
             can.setFont("Helvetica-Bold", 10)
-            y= 520
+            y= 553
             # if (i!=0 and printValue):
             #     i=0
             #     can.drawString(375, y-i*13, "{:<18}".format( 'TOTAL'))
@@ -126,23 +159,28 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
         else :             
             can.setFont("Helvetica-Bold", 10)
             
-            can.drawString(380, 480, "{:<18}".format( 'PAID'))
-            can.drawRightString(545, 480,'('+currencyFormater(float(printData['payAmount']))+'0)')
+            can.drawString(380, 510, "{:<18}".format( 'PAID'))
+            can.drawRightString(545, 510,'('+currencyFormater(float(printData['payAmount']))+'0)')
 
-            can.drawString(380, 468, "{:<18}".format( 'BALANCE'))
-            can.drawRightString(545,468,currencyFormater(float(printData['balance']))+'0')
+            can.drawString(380, 499, "{:<18}".format( 'BALANCE'))
+            can.drawRightString(545,499,currencyFormater(float(printData['balance']))+'0')
 
-        can.setFont("Helvetica-Bold", 12)
+       
         balPrefix = '- ' if float(printData['balance'])<0 else ''
 
+        can.setFont("Helvetica", 11)
+        can.drawString(55, 474, "ISSUED BY : "+printData['issuedby'].upper())
+
+        can.drawString(235, 474, "TYPE : "+invType.upper())
+
+        can.setFont("Helvetica-Bold", 12)
         footerText = 'TOTAL' if printValue else printData['payMethod2'].upper()+' BALANCE'
-        can.drawRightString(425, 445, footerText)
+        can.drawRightString(420, 474, footerText)
 
         footerValue = printData['total'] if printValue else printData['payMethod2Amount']
-        can.drawRightString(540, 445, 'Rs. '+currencyFormater(abs(float(footerValue)))+'0')
+        can.drawRightString(540, 474, 'Rs. '+currencyFormater(abs(float(footerValue)))+'0')
         
-        can.setFont("Helvetica", 11)
-        can.drawString(70, 445, "ISSUED BY  : "+printData['issuedby'].upper())
+       
 
 
         
@@ -155,7 +193,7 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
     # create a new PDF with Reportlab
     new_pdf = PdfFileReader(packet)
     # read your existing PDF
-    existing_pdf = PdfFileReader(open("invTemp.pdf", "rb")) if (printData['type']=='Paid') else PdfFileReader(open("invTemp.pdf", "rb"))
+    existing_pdf = PdfFileReader(open("defultJewelryInvoice.pdf", "rb")) if (printData['type']=='Paid') else PdfFileReader(open("defultJewelryInvoice.pdf", "rb"))
     output = PdfFileWriter()
     # add the "watermark" (which is the new pdf) on the existing page
     page = existing_pdf.getPage(0)

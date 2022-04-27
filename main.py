@@ -113,7 +113,7 @@ if  ('invoicePrinter' in metaData['config']):
                 # if (formPrinter):
                 #     setDotMatrixPrinting(formPrinter,metaData,data)
 
-            db.child(firmIds[0]+'/invoicePrint').remove()
+            #db.child(firmIds[0]+'/invoicePrint').remove()
 
             
     db.child(firmIds[0]+'/invoicePrint').stream(listener)
