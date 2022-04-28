@@ -51,28 +51,28 @@ except TypeError:
 firmIds =metaData['firmID'].split('@')
 
 
-if ('thermalPrinter' in metaData['config']):
-    thermalPrinter = False
-    def listener(message):
-        global thermalPrinter
-        data=message["data"]
-        if not (thermalPrinter):
-            thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 1)        
-        if(data and thermalPrinter):
-            #setThermalPrinting(thermalPrinter,metaData,data)            
-            try :
-                setThermalPrinting(thermalPrinter,metaData,data)                
-            except :
-                print('printer error')
-                thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 1)
-                if(thermalPrinter):
-                    setThermalPrinting(thermalPrinter,metaData,data)
+# if ('thermalPrinter' in metaData['config']):
+#     thermalPrinter = False
+#     def listener(message):
+#         global thermalPrinter
+#         data=message["data"]
+#         if not (thermalPrinter):
+#             thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 1)        
+#         if(data and thermalPrinter):
+#             #setThermalPrinting(thermalPrinter,metaData,data)            
+#             try :
+#                 setThermalPrinting(thermalPrinter,metaData,data)                
+#             except :
+#                 print('printer error')
+#                 thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 1)
+#                 if(thermalPrinter):
+#                     setThermalPrinting(thermalPrinter,metaData,data)
                 
-            db.child(firmIds[0]+'/thermalPrint').remove()
+#             db.child(firmIds[0]+'/thermalPrint').remove()
 
 
 
-    db.child(firmIds[0]+'/thermalPrint').stream(listener)
+    # db.child(firmIds[0]+'/thermalPrint').stream(listener)
 
 
 if ('labelPrinter' in metaData['config']):
