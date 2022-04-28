@@ -7,13 +7,13 @@ import os
 
 
 
-def setPDFInvoicePrinter (printer,printingHeader,printData ):
-    packet = io.BytesIO()
-    can = canvas.Canvas(packet, pagesize=letter)
+def setPDFInvoicePrinter (printData ):
+    # packet = io.BytesIO()
+    # can = canvas.Canvas(packet, pagesize=letter)
 
-    # pdf_file = 'Destination.pdf'
+    pdf_file = 'destination.pdf'
  
-    # can = canvas.Canvas(pdf_file)
+    can = canvas.Canvas(pdf_file)
 
     cusPhone = printData['namePhone'] if ('namePhone' in printData and printData['namePhone']) else '--'
     cusAdress =  printData['nameAddress'] if 'nameAddress' in printData else '--' 
@@ -75,7 +75,7 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
         can.drawString(370, 665,"{:^18}".format( printData['payMethod'].upper()))
         can.drawRightString(545, 665, currencyFormater(printData['total'])+'.00')
         can.setFont("Helvetica", 11)
-        can.drawString(90, 650, printData['paidForLabel'].upper() )
+        can.drawString(90, 650, (printData['paidForLabel'] or 'PAID FOR SMS').upper() )
         can.drawString(90, 630, comment )
 
         can.setFont("Helvetica", 11)
@@ -187,22 +187,22 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
 
     can.save()
 
-    #move to the beginning of the StringIO buffer
-    packet.seek(0)
+    # #move to the beginning of the StringIO buffer
+    # packet.seek(0)
 
-    # create a new PDF with Reportlab
-    new_pdf = PdfFileReader(packet)
-    # read your existing PDF
-    existing_pdf = PdfFileReader(open("defultJewelryInvoice.pdf", "rb")) if (printData['type']=='Paid') else PdfFileReader(open("defultJewelryInvoice.pdf", "rb"))
-    output = PdfFileWriter()
-    # add the "watermark" (which is the new pdf) on the existing page
-    page = existing_pdf.getPage(0)
-    page.mergePage(new_pdf.getPage(0))
-    output.addPage(page)
-    # finally, write "output" to a real file
-    outputStream = open("destination.pdf", "wb")
-    output.write(outputStream)
-    outputStream.close()
+    # # create a new PDF with Reportlab
+    # new_pdf = PdfFileReader(packet)
+    # # read your existing PDF
+    # existing_pdf = PdfFileReader(open("defultJewelryInvoice.pdf", "rb")) if (printData['type']=='Paid') else PdfFileReader(open("defultJewelryInvoice.pdf", "rb"))
+    # output = PdfFileWriter()
+    # # add the "watermark" (which is the new pdf) on the existing page
+    # page = existing_pdf.getPage(0)
+    # page.mergePage(new_pdf.getPage(0))
+    # output.addPage(page)
+    # # finally, write "output" to a real file
+    # outputStream = open("destination.pdf", "wb")
+    # output.write(outputStream)
+    # outputStream.close()
     os.system('lp ./destination.pdf')
 
 
