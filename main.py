@@ -52,7 +52,7 @@ firmIds =metaData['firmID'].split('@')
 
 
 
-def listener(message):     
+def mainListener(message):     
 
     if not (message['data']) :
         return 
@@ -105,5 +105,18 @@ def listener(message):
             db.child(firmIds[0]+'/stockPrinter').remove()
 
 
-db.child(firmIds[0]).stream(listener)
+db.child(firmIds[0]).stream(mainListener)
 
+if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
+    def listener(message):
+        data=message["data"]        
+        if(data):  
+            try:
+                SetPrintingJobStock(data)
+                
+            except :
+                print('printer error')
+            db.child(data['firmID']+'/stockPrinter').remove() 
+    
+    for firmId in firmIds:
+        db.child(firmId+'/stockPrinter').stream(listener)
