@@ -54,18 +54,32 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
 
    
 
-    if (printData['type']=='Paid'):
-        comment = "("+printData['comment']+')' if ('comment' in printData and  printData['comment'] and printData['comment']!='Nothing' ) else ' '
-        can.setFont("Helvetica", 13)
-        can.drawString(37, 460, "{:^12}".format( '1'))
-        can.drawString(80, 460, 'A PAYMENT RECEIVED-CONFIRMATION' )
-        can.drawString(340, 460,"{:^32}".format( printData['payMethod']))
-        can.drawRightString(570, 460, currencyFormater(printData['total'])+'.00')
-        can.setFont("Helvetica", 11)
-        can.drawString(80, 444, comment )
+    if (printData['type']=='Paid' or printData['type']=='SMS' ):
+        can.setFont("Helvetica-Bold", 11)
+         
+        
 
-        can.setFont("Helvetica", 13)
-        can.drawRightString(565, 210, 'Rs. '+currencyFormater(float(printData['total']))+'0')
+        comment = "("+printData['comment']+')' if ('comment' in printData and  printData['comment'] and printData['comment']!='Nothing' ) else ' '
+        can.setFont("Helvetica", 11)
+        can.drawString(50, 595, "{:^12}".format( '1'))
+        can.drawString(90, 595, 'A PAYMENT RECEIVED-CONFIRMATION' )
+        can.drawString(370, 595,"{:^18}".format('-'))
+        can.drawRightString(545, 595, currencyFormater(printData['total'])+'.00')
+        can.setFont("Helvetica", 11)
+        can.drawString(90, 580, printData['paidForLabel'].upper() if printData['paidForLabel'] else 'PAID FOR SMS' )
+        can.drawString(90, 565, comment )
+
+        can.setFont("Helvetica", 11)
+        can.drawString(55, 445, "ISSUED BY : "+printData['issuedby'].upper())
+
+        can.drawString(235, 445, "TYPE : PAYMENT")
+
+        can.setFont("Helvetica-Bold", 12)
+        
+        can.drawRightString(420, 445, 'TOTAL')
+
+        
+        can.drawRightString(540, 445, 'Rs. '+currencyFormater(abs(float(printData['total'])))+'0')
         
 
     else :
@@ -132,8 +146,14 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
             can.drawString(380, 468, "{:<18}".format( 'BALANCE'))
             can.drawRightString(545,468,currencyFormater(float(printData['balance']))+'0')
 
-        can.setFont("Helvetica-Bold", 12)
         balPrefix = '- ' if float(printData['balance'])<0 else ''
+
+        can.setFont("Helvetica", 11)
+        can.drawString(70, 445, "ISSUED BY  : "+printData['issuedby'].upper())
+
+        can.drawString(235, 445, "TYPE : "+invType.upper())
+          
+        can.setFont("Helvetica-Bold", 12)
 
         footerText = 'TOTAL' if printValue else printData['payMethod2'].upper()+' BALANCE'
         can.drawRightString(425, 445, footerText)
@@ -141,8 +161,7 @@ def setPDFInvoicePrinter (printer,printingHeader,printData ):
         footerValue = printData['total'] if printValue else printData['payMethod2Amount']
         can.drawRightString(540, 445, 'Rs. '+currencyFormater(abs(float(footerValue)))+'0')
         
-        can.setFont("Helvetica", 11)
-        can.drawString(70, 445, "ISSUED BY  : "+printData['issuedby'].upper())
+      
 
 
         
