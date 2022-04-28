@@ -51,114 +51,63 @@ except TypeError:
 firmIds =metaData['firmID'].split('@')
 
 
-if ('thermalPrinter' in metaData['config']):
-    thermalPrinter = False
-    def listener(message):
-        global thermalPrinter
-        data=message["data"]
-        if not (thermalPrinter):
-            thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 1)        
-        if(data and thermalPrinter):
-            #setThermalPrinting(thermalPrinter,metaData,data)            
-            try :
-                setThermalPrinting(thermalPrinter,metaData,data)                
-            except :
-                print('printer error')
-                thermalPrinter = configPrinter(metaData['config']['thermalPrinter'], 'thermalPrinter', 1)
-                if(thermalPrinter):
-                    setThermalPrinting(thermalPrinter,metaData,data)
-                
-            db.child(firmIds[0]+'/thermalPrint').remove()
+
+def mainListener(message):     
+
+    if not (message['data']) :
+        return 
 
 
-
-    db.child(firmIds[0]+'/thermalPrint').stream(listener)
-
-
-if ('labelPrinter' in metaData['config']):
-    labelPrinter = False
-    def listener(message):        
-        global labelPrinter
-        data=message["data"]
-        if not (labelPrinter):
-            labelPrinter = configPrinter(metaData['config']['labelPrinter'], 'labelPrinter', 1)       
-        if(data and labelPrinter):
-            try :
-                setLabelPrinting(labelPrinter,metaData,data)                
-            except :
-                print('printer error')
-                labelPrinter = configPrinter(metaData['config']['labelPrinter'], 'labelPrinter', 1)
-                if (labelPrinter):
-                    setLabelPrinting(labelPrinter,metaData,data)
-
-            db.child(firmIds[0]+'/labelPrinter').remove()
-
-    db.child(firmIds[0]+'/labelPrinter').stream(listener)
-
-
-if  ('invoicePrinter' in metaData['config']):
-    formPrinter = False
-    def listener(message):
-        global formPrinter
-        data=message["data"] 
-        # if not (formPrinter):
-        #     formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)       
+    if  ('invoicePrinter' in metaData['config'] and (message['path']=='/invoicePrint' or 'invoicePrint' in message["data"])): #or 'invoicePrint' in message["data"] 
+        data=message["data"]  if message['path']=='/invoicePrint' else message["data"]['invoicePrint']
         if(data):  
             try :
-                setPDFInvoicePrinter('invoicePrinter','metaData',data)
+                setPDFInvoicePrinter(data)
                 
             except :
                 print('printer error')
-                # formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)
-                # if (formPrinter):
-                #     setDotMatrixPrinting(formPrinter,metaData,data)
 
             db.child(firmIds[0]+'/invoicePrint').remove()
 
-            
-    db.child(firmIds[0]+'/invoicePrint').stream(listener)
-
-if  ('reportPrinter' in metaData['config']):
-    formPrinter = False
-    def listener(message):
-        global formPrinter
-        data=message["data"] 
-        # if not (formPrinter):
-        #     formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)       
+    if ('certificatePrinter' in metaData['config'] and (message['path']=='/certificatePrinter' or 'certificatePrinter' in message["data"])): 
+        data=message["data"]  if message['path']=='/certificatePrinter' else message["data"]['certificatePrinter']
         if(data):  
-            try :
-            # print(data)
-                SetPrintingJobReport(data)
-                
-            except :
-                print('printer error')
-                # formPrinter = configPrinter(metaData['config']['formPrinter'], 'formPrinter', 1)
-                # if (formPrinter):
-                #     setDotMatrixPrinting(formPrinter,metaData,data)
-
-            db.child(firmIds[0]+'/reportPrinter').remove()
-
-            
-    db.child(firmIds[0]+'/reportPrinter').stream(listener)
-
-if ('certificatePrinter' in metaData['config']):
-    def listener(message):
-        data=message["data"]        
-        if(data):  
-            #setDotMatrixPrinting(printers['formPrinter'],metaData,data)          
             try :
                 SetPrintingJobCertificate(data)
                 
             except :
                 print('printer error')
-            db.child(firmIds[0]+'/certificatePrinter').remove() 
-            
-    db.child(firmIds[0]+'/certificatePrinter').stream(listener)
+
+            db.child(firmIds[0]+'/certificatePrinter').remove()
 
 
+    if  ('reportPrinter' in metaData['config'] and (message['path']=='/reportPrinter' or 'reportPrinter' in message["data"])): 
+        data=message["data"]  if message['path']=='/reportPrinter' else message["data"]['reportPrinter']
+        if(data):  
+            try :
+                SetPrintingJobReport(data)
+                
+            except :
+                print('printer error')
+
+            db.child(firmIds[0]+'/reportPrinter').remove()
 
 
-if ('stockPrinter' in metaData['config']):
+    if  ('stockPrinter' in metaData['config'] and len(firmIds) ==1 and (message['path']=='/stockPrinter' or 'stockPrinter' in message["data"])): 
+        data=message["data"]  if message['path']=='/stockPrinter' else message["data"]['stockPrinter']
+        if(data):  
+            try :
+                SetPrintingJobStock(data)
+                
+            except :
+                print('printer error')
+
+            db.child(firmIds[0]+'/stockPrinter').remove()
+
+
+db.child(firmIds[0]).stream(mainListener)
+
+if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
     def listener(message):
         data=message["data"]        
         if(data):  

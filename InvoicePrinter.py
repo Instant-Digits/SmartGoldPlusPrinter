@@ -7,7 +7,7 @@ import os
 
 
 
-def setPDFInvoicePrinter (printer,printingHeader,printData ):
+def setPDFInvoicePrinter (printData ):
     packet = io.BytesIO()
     can = canvas.Canvas(packet, pagesize=letter)
 
