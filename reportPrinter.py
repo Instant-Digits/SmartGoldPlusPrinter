@@ -19,7 +19,6 @@ def SetPrintingJobReport(printData):
     itemsKaradUP={}
 
     userInvoiceCount={}
-
     
 
     y=800
@@ -199,6 +198,8 @@ def SetPrintingJobReport(printData):
         can.setFont("Helvetica-Bold", 10)
 
         date = printData['date'] if ('date' in printData and printData['date']) else '--'
+
+        
 
         can.drawString(40, y-l*lSpace,'PAGE NO : '+str(page)+'    CODE : '+'firmCode'+'    TYPE : '+'PURCHASE'+'    DATE : '+date+ "      Printed on : "+ printData['printedOn'])
         l+=1
