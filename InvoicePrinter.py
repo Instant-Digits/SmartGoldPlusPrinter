@@ -156,6 +156,7 @@ def setPDFInvoicePrinter (printData ):
         can.setFont("Helvetica-Bold", 12)
 
         footerText = 'TOTAL' if printValue else printData['payMethod2'].upper()+' BALANCE'
+        footerText = 'Est. TOTAL' if printData['type']=='Order' else footerText
         can.drawRightString(425, 445, footerText)
 
         footerValue = printData['total'] if printValue else printData['payMethod2Amount']
