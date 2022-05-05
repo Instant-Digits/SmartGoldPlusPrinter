@@ -116,6 +116,7 @@ def setPDFInvoicePrinter (printData ):
             i=i+1
 
             can.setFont("Helvetica", 9)
+            printData['payMethod1'] = printData['payMethod1'][0:40]+'...' if len(printData['payMethod1'])>40 else printData['payMethod1']
             
             can.drawString(90, y-i*11,("ORDER: "+printData['payMethod1'].upper() if '-OR' in printData['purchase'] else printData['payMethod1'].upper() )  +' (' +printData['purchase']+')')#80
             #can.drawString(360, y-i*11, "{:^18}".format( str(value['weight'])+'g'))
