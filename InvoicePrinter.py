@@ -32,8 +32,8 @@ def setPDFInvoicePrinter (printData ):
 
     can.setFont("Helvetica", 10)
 
-    can.drawString(410, 828, "DATE")
-    can.drawString(450, 828, ": "+printData['date']+' '+ printData['time'][0:5] +' '+printData['time'][-2:])
+    can.drawString(410, 825, "DATE")
+    can.drawString(450, 825, ": "+printData['date']+' '+ printData['time'][0:5] +' '+printData['time'][-2:])
     
     can.setFont("Helvetica", 11)
     can.drawString(55, 716, "No. : "+printData['invoiceSN'])
@@ -121,7 +121,7 @@ def setPDFInvoicePrinter (printData ):
 
         if ('purchase' in printData and  printData['purchase']):
             can.setFont("Helvetica-Bold", 10)
-            y= 553
+            y= 544
             # if (i!=0 and printValue):
             #     i=0
             #     can.drawString(375, y-i*13, "{:<18}".format( 'TOTAL'))
@@ -130,29 +130,30 @@ def setPDFInvoicePrinter (printData ):
             
             
             i=i+1
-            can.drawString(90, y-i*13, 'PAYMENTS' )
+            can.drawString(90, y-i*12, 'PAYMENTS' )
 
             i=i+1
 
-            can.setFont("Helvetica", 10)
+            can.setFont("Helvetica", 9)
             
-            can.drawString(90, y-i*13, printData['payMethod1'].upper() +' (' +printData['purchase']+')')#80
-            #can.drawString(360, y-i*13, "{:^18}".format( str(value['weight'])+'g'))
+            can.drawString(90, y-i*11,("ORDER: "+printData['payMethod1'].upper() if '-OR' in printData['purchase'] else printData['payMethod1'].upper() )  +' (' +printData['purchase']+')')#80
+
+            #can.drawString(360, y-i*11, "{:^18}".format( str(value['weight'])+'g'))
             if(printValue):
-                can.drawRightString(545, y-i*13, '('+ currencyFormater(float(printData['payAmount'])-float(printData['payMethod2Amount']))+'0)')
+                can.drawRightString(545, y-i*11, '('+ currencyFormater(float(printData['payAmount'])-float(printData['payMethod2Amount']))+'0)')
 
 
             i=i+1
-            can.drawString(90, y-i*13, printData['payMethod2'].upper() )#80
-            #can.drawString(360, y-i*13, "{:^18}".format( str(value['weight'])+'g'))
+            can.drawString(90, y-i*11, printData['payMethod2'].upper() )#80
+            #can.drawString(360, y-i*11, "{:^18}".format( str(value['weight'])+'g'))
             
-            can.drawRightString(545, y-i*13, '('+ currencyFormater(float(printData['payMethod2Amount']))+'0)')
+            can.drawRightString(545, y-i*11, '('+ currencyFormater(float(printData['payMethod2Amount']))+'0)')
 
             i=i+1
-            can.drawString(90, y-i*13, 'BALANCE' )#80
-            #can.drawString(360, y-i*13, "{:^18}".format( str(value['weight'])+'g'))
+            can.drawString(90, y-i*11, 'BALANCE' )#80
+            #can.drawString(360, y-i*11, "{:^18}".format( str(value['weight'])+'g'))
             
-            can.drawRightString(545, y-i*13, '('+ currencyFormater(float(printData['balance']))+'0)')
+            can.drawRightString(545, y-i*11, '('+ currencyFormater(float(printData['balance']))+'0)')
           
            
 
@@ -187,7 +188,7 @@ def setPDFInvoicePrinter (printData ):
 
     can.save()
 
-    # #move to the beginning of the StringIO buffer
+    #move to the beginning of the StringIO buffer
     # packet.seek(0)
 
     # # create a new PDF with Reportlab
