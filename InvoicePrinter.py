@@ -164,9 +164,9 @@ def setPDFInvoicePrinter (printData ):
             
             can.drawString(380, 510, "{:<18}".format( 'PAID'))
             can.drawRightString(545, 510,'('+currencyFormater(float(printData['payAmount']))+'0)')
-
-            can.drawString(380, 499, "{:<18}".format( 'BALANCE'))
-            can.drawRightString(545,499,currencyFormater(float(printData['balance']))+'0')
+            if (printValue):
+                can.drawString(380, 499, "{:<18}".format( 'BALANCE'))
+                can.drawRightString(545,499,currencyFormater(float(printData['balance']))+'0')
 
        
         balPrefix = '- ' if float(printData['balance'])<0 else ''
@@ -176,13 +176,21 @@ def setPDFInvoicePrinter (printData ):
 
         can.drawString(235, 474, "TYPE : "+invType.upper())
 
-        can.setFont("Helvetica-Bold", 12)
-        footerText = 'TOTAL' if printValue else printData['payMethod2'].upper()+' BALANCE'
-        footerText = 'Est. TOTAL' if printData['type']=='Order' else footerText
+        if (printData['type']=='Order' and printValue):
+            footerText = 'Est. TOTAL'
+            footerValue =printData['total'] 
+        elif (printData['type']=='Order') :
+            footerText =  printData['payMethod2'].upper()+' PAID' if  printData['payMethod2Amount']>0 else 'PAYMENT'
+            footerValue =  printData['payMethod2Amount']+' PAID' if  printData['payMethod2Amount']>0 else printData['payAmount']
+
+        else :
+            footerText = 'TOTAL' if printValue else printData['payMethod2'].upper()+' PAID'
+            footerValue = printData['total'] if printValue else printData['payMethod2Amount']
+
+        can.setFont("Helvetica-Bold", 12)   
 
         can.drawRightString(420, 474, footerText)
 
-        footerValue = printData['total'] if printValue else printData['payMethod2Amount']
         can.drawRightString(540, 474, 'Rs. '+currencyFormater(abs(float(footerValue)))+'0')
         
        
