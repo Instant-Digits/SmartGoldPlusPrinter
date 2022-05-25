@@ -88,7 +88,7 @@ def mainListener(message):
                 SetPrintingJobReport(data)
                 
             except :
-                print('printer error')
+                print('reportPrinter error')
 
             db.child(firmIds[0]+'/reportPrinter').remove()
 
