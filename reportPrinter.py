@@ -116,6 +116,12 @@ def SetPrintingJobReport(printData):
                 l+=1
 
                 if ('karad' in value2 and value2['karad'] ):
+                    # value2['weight']=value2['weight'].replace('-', '.')
+                    try :
+                        value2['weight']=float(value2['weight'])
+                    except :
+                        value2['weight']=0
+                    
                     itemsKaradW[value2['karad']]=(itemsKaradW[value2['karad']] if value2['karad'] in itemsKaradW else 0 )+float(value2['weight'])
                     itemsKaradUP[value2['karad']]=(itemsKaradUP[value2['karad']] if value2['karad'] in itemsKaradUP else 0 )+int(value2['unitPrice'])
                 
@@ -152,7 +158,7 @@ def SetPrintingJobReport(printData):
                 l+=1
                 l+=1
             can.drawString(R1, y-l*lSpace,key)
-            can.drawString(R2, y-l*lSpace,  ': '+currencyFormater(userInvoiceCount[key])+' Invs') 
+            can.drawString(R2+20, y-l*lSpace,  ': '+currencyFormater(userInvoiceCount[key])+' Invs') 
             can.drawString(180, y-l*lSpace,  ': Rs. '+currencyFormater(value)) 
             l+=1
 
