@@ -20,7 +20,7 @@ from dotMatrixPrinter import setDotMatrixPrinting
 from thermalPrinter import setThermalPrinting
 from labelPrinter import setLabelPrinting
 from InvoicePrinter import setPDFInvoicePrinter
-
+from cashflowPrinter import setStatementPrinter
 
 
 config = {
@@ -91,6 +91,17 @@ def mainListener(message):
                 print('printer error')
 
             db.child(firmIds[0]+'/reportPrinter').remove()
+
+    if  ('cashFlowPrinter' in metaData['config'] and (message['path']=='/cashFlowPrinter' or 'cashFlowPrinter' in message["data"])): 
+        data=message["data"]  if message['path']=='/cashFlowPrinter' else message["data"]['cashFlowPrinter']
+        if(data):  
+            try :
+                setStatementPrinter(data)
+                
+            except :
+                print('printer error')
+
+            db.child(firmIds[0]+'/cashFlowPrinter').remove()
 
 
     if  ('stockPrinter' in metaData['config'] and len(firmIds) ==1 and (message['path']=='/stockPrinter' or 'stockPrinter' in message["data"])): 
