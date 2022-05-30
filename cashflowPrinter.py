@@ -15,6 +15,7 @@ def setStatementPrinter (printData ):
     top=650
     lSpace=20   
     l=1
+   
 
     can.drawRightString(520, 750,"PRINTED ON : "+ printData['printedOn'])
 
@@ -36,16 +37,30 @@ def setStatementPrinter (printData ):
     l+=1
     can.setFont("Helvetica", 12)
     can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, 'ADVANCE(A/C) BY CASH' )#80   
+    can.drawString(140, top-l*lSpace, '(A/C) ADVANCE')#80   
 
     can.drawRightString(520, top-l*lSpace, currencyFormater(printData['acSalesCash'])+'.00' )
 
     l+=1
     can.setFont("Helvetica", 12)
     can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, 'PAYMENT RECEIVED BY CASH' )#80   
+    can.drawString(140, top-l*lSpace, '(A/C) PAYMENT RECEIVED' )#80   
 
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['cusPayment'])+'.00' )
+    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['cusPaymentSales'])+'.00' )
+
+    l+=1
+    can.setFont("Helvetica", 12)
+    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
+    can.drawString(140, top-l*lSpace, 'CASH ORDER' )#80   
+
+    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['orderCash'])+'.00' )
+
+    l+=1
+    can.setFont("Helvetica", 12)
+    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
+    can.drawString(140, top-l*lSpace, 'ORDER PAYMENT RECEIVED' )#80   
+
+    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['cusPaymentOrder'])+'.00' )
 
     l+=1
     can.setFont("Helvetica", 12)
@@ -73,12 +88,12 @@ def setStatementPrinter (printData ):
     can.drawRightString(520, top-l*lSpace, currencyFormater(printData['paidPurchase'])+'.00' )
 
 
-    l+=1
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l-3)))
-    can.drawString(140, top-l*lSpace, 'PAID AS PURCHASE/ORDER BALANCE' )#80   
+    # l+=1
+    # can.setFont("Helvetica", 12)
+    # can.drawString(80, top-l*lSpace, "{:^12}".format( str(l-3)))
+    # can.drawString(140, top-l*lSpace, 'PAID AS PURCHASE/ORDER BALANCE' )#80   
 
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['paidBalanceP_O'])+'.00' )
+    # can.drawRightString(520, top-l*lSpace, currencyFormater(printData['paidBalanceP_O'])+'.00' )
 
     l+=1
     can.setFont("Helvetica", 12)
