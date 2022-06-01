@@ -61,11 +61,11 @@ def mainListener(message):
     if  ('invoicePrinter' in metaData['config'] and (message['path']=='/invoicePrint' or 'invoicePrint' in message["data"])): #or 'invoicePrint' in message["data"] 
         data=message["data"]  if message['path']=='/invoicePrint' else message["data"]['invoicePrint']
         if(data):  
-            try :
-                setPDFInvoicePrinter(data)
+            # try :
+            setPDFInvoicePrinter(data)
                 
-            except :
-                print('printer error')
+            # except :
+            #     print('printer error')
 
             db.child(firmIds[0]+'/invoicePrint').remove()
 
