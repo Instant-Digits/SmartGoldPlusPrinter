@@ -21,8 +21,7 @@ def setPDFInvoicePrinter (printData ):
 
     if int(printData['balance'])>0 :
         invType = 'A/C'+' '+printData['type'] 
-    elif (int(printData['balance'])==0 and printData['type'] in ['Sales', 'Sales_Saved']):  
-        invType = 'Cash'+' '+printData['type']
+   
     else:
         invType =printData['type']
 
@@ -118,20 +117,21 @@ def setPDFInvoicePrinter (printData ):
             can.setFont("Helvetica", 9)
             printData['payMethod1'] = printData['payMethod1'][0:40]+'...' if len(printData['payMethod1'])>40 else printData['payMethod1']
             
-            can.drawString(90, y-i*11,("ORDER: "+printData['payMethod1'].upper() if '-OR' in printData['purchase'] else printData['payMethod1'].upper() )  +' (' +printData['purchase']+')')#80
+            can.drawString(90, y-i*11,("ORDER: "+(printData['payMethod1'] or 'Cash').upper() if '-OR' in printData['purchase'] else (printData['payMethod1'] or 'Cash').upper() )  +' (' +printData['purchase']+')')#80
             #can.drawString(360, y-i*11, "{:^18}".format( str(value['weight'])+'g'))
             if(printValue):
                 can.drawRightString(545, y-i*11, '('+ currencyFormater(float(printData['payAmount'])-float(printData['payMethod2Amount']))+'0)')
 
 
             i=i+1
-            can.drawString(90, y-i*11, printData['payMethod2'].upper() )#80
+            can.drawString(90, y-i*11, (printData['payMethod2'] or 'Cash').upper() )#80
             #can.drawString(360, y-i*11, "{:^18}".format( str(value['weight'])+'g'))
             
             can.drawRightString(545, y-i*11, '('+ currencyFormater(float(printData['payMethod2Amount']))+'0)')
-
+            if (printData['balance']<0):
+                can.setFont("Helvetica-Bold", 9)
             i=i+1
-            can.drawString(90, y-i*11, 'BALANCE' )#80
+            can.drawString(90, y-i*11, 'BALANCE'+ (' (PAY BACK)' if (printData['balance']<0) else '') )#80
             #can.drawString(360, y-i*11, "{:^18}".format( str(value['weight'])+'g'))
             
             can.drawRightString(545, y-i*11, '('+ currencyFormater(float(printData['balance']))+'0)')
@@ -140,12 +140,16 @@ def setPDFInvoicePrinter (printData ):
 
         else :             
             can.setFont("Helvetica-Bold", 10)
-            
-            can.drawString(380, 480, "{:<18}".format( 'PAID'))
+            can.drawString(90, 492,'PAYMENT DETAILS')
+            can.setFont("Helvetica", 10)
+            can.drawString(90, 480,printData['payMethod'].upper() )
             can.drawRightString(545, 480,'('+currencyFormater(float(printData['payAmount']))+'0)')
+            if (printData['balance']<0):
+                can.setFont("Helvetica-Bold", 10)
+            
             if (printValue):
-                can.drawString(380, 468, "{:<18}".format( 'BALANCE'))
-                can.drawRightString(545,468,currencyFormater(float(printData['balance']))+'0')
+                can.drawString(90, 468, 'BALANCE'+(' (PAY BACK)' if (printData['balance']<0) else '') )#80
+                can.drawRightString(545,468,'('+currencyFormater(float(printData['balance']))+'0)')
 
         balPrefix = '- ' if float(printData['balance'])<0 else ''
 
@@ -164,13 +168,13 @@ def setPDFInvoicePrinter (printData ):
             footerValue =  printData['payMethod2Amount']+' PAID' if  printData['payMethod2Amount']>0 else printData['payAmount']
 
         else :
-            footerText = 'TOTAL' if printValue else printData['payMethod2'].upper()+' PAID'
-            footerValue = printData['total'] if printValue else printData['payMethod2Amount']
+            footerText = 'TOTAL' if printValue else 'BALANCE'
+            footerValue = printData['total'] if printValue else printData['balance']
 
 
         
         can.drawRightString(425, 445, footerText)        
-        can.drawRightString(540, 445, 'Rs. '+currencyFormater(abs(float(footerValue)))+'0')
+        can.drawRightString(540, 445, 'Rs. '+currencyFormater((float(footerValue)))+'0')
         
       
 

@@ -283,7 +283,7 @@ def SetPrintingJobReport(printData):
                     l+=1
 
                 can.drawString(R3, y-l*lSpace, (value2['label'][:30] + '..') if len(value2['label']) > 30 else value2['label'] )        
-                can.drawRightString(400, y-l*lSpace, value2['weight']+'g')
+                can.drawRightString(400, y-l*lSpace, value2['weight']+'g' if (float(value2['weight'])>0) else 'N.A')
                 can.drawRightString(465, y-l*lSpace, currencyFormater(value2['unitPrice']))
                 totalUnitPrice =totalUnitPrice+int(value2['unitPrice'])
                 invLine+=1
@@ -350,7 +350,7 @@ def SetPrintingJobReport(printData):
                 l+=1
                 l+=1
             can.drawString(350, y-l*lSpace,key)     
-            can.drawString(400, y-l*lSpace,  currencyFormater(value)+'g') 
+            can.drawString(400, y-l*lSpace,  currencyFormater(value)+'g' if (value>0) else 'N.A') 
             can.drawString(480, y-l*lSpace,  'Rs. '+currencyFormater(itemsKaradUP[key])) 
             l+=1
 
