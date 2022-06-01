@@ -281,6 +281,10 @@ def SetPrintingJobReport(printData):
 
                     can.drawString(535, y-l*lSpace, 'PAYMENT')        
                     l+=1
+                try :
+                    value2['weight'] = value2['netWeight'] if ('netWeight' in value2 and float(value2['netWeight'])>float(value2['weight']) )else value2['weight']
+                except :
+                    value2['weight']='0.000'
 
                 can.drawString(R3, y-l*lSpace, (value2['label'][:30] + '..') if len(value2['label']) > 30 else value2['label'] )        
                 can.drawRightString(400, y-l*lSpace, value2['weight']+'g' if (float(value2['weight'])>0) else 'N.A')
