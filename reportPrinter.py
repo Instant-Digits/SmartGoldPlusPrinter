@@ -29,8 +29,7 @@ def SetPrintingJobReport(printData):
     l =0
     lSpace=14
     page =1
-    if ('salesItems' in printData and len(printData['salesItems'])>0): 
-    
+    if ('salesItems' in printData and len(printData['salesItems'])>0):    
 
     
         can.setFont("Helvetica-Bold", 10)

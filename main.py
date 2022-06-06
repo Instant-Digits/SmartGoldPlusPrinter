@@ -35,6 +35,8 @@ db = firebasecon.database()
 printers={}
 
 print ('System start')
+os.system('lprm -')
+print ('Pending Printing jobs are cleaned')
 
 waitForInternet(4)
 
@@ -50,9 +52,10 @@ except TypeError:
 
 firmIds =metaData['firmID'].split('@')
 
+lastCheckTime = time.time() #printer refresh
 
-
-def mainListener(message):     
+def mainListener(message):  
+    global lastCheckTime   
 
     if not (message['data']) :
         return 
@@ -63,6 +66,8 @@ def mainListener(message):
         if(data):  
             try :
                 setPDFInvoicePrinter(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -74,6 +79,8 @@ def mainListener(message):
         if(data):  
             try :
                 SetPrintingJobCertificate(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -86,6 +93,8 @@ def mainListener(message):
         if(data):  
             try :
                 SetPrintingJobReport(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -97,6 +106,8 @@ def mainListener(message):
         if(data):  
             try :
                 setStatementPrinter(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -109,6 +120,8 @@ def mainListener(message):
         if(data):  
             try :
                 SetPrintingJobStock(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -124,6 +137,8 @@ if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
         if(data):  
             try:
                 SetPrintingJobStock(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -131,3 +146,18 @@ if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
     
     for firmId in firmIds:
         db.child(firmId+'/stockPrinter').stream(listener)
+
+
+
+
+if ('printerRefresh' in metaData and metaData['printerRefresh']):
+    print ('Printer Refresh')
+    while (True):
+        if(time.time()>lastCheckTime+int(metaData['printerRefresh'])*60):
+            lastCheckTime = time.time()
+            os.system('lpstat -t')
+            print ('Printer Refresh')
+        time.sleep(60)
+        
+
+        
