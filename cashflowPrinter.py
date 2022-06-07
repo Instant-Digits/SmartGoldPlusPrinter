@@ -12,142 +12,93 @@ def setStatementPrinter (printData ):
     can = canvas.Canvas(packet, pagesize=letter)
 
     
-    top=650
+    top=680
     lSpace=20   
     l=1
    
 
-    can.drawRightString(520, 750,"PRINTED ON : "+ printData['printedOn'])
+    can.drawRightString(570, 760,"PRINTED ON : "+ printData['printedOn'])
 
     can.setFont("Helvetica-Bold", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, 'INITIAL CASH BALANCE' )#80   
+    can.drawString(40, top-l*lSpace, "{:^12}".format( str(l)))
+    can.drawString(90, top-l*lSpace, 'INITIAL BALANCES' )#80   
 
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['initialCashBalance'])+'.00' )
+    can.drawRightString(450, top-l*lSpace, currencyFormater(printData['initialCashBalance'])+'.00' )
+    can.drawRightString(570, top-l*lSpace, currencyFormater(printData['initialBalance'] if 'initialBalance' in printData else 0)+'.00' )
+
 
     l+=1
-
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, 'SALES BY CASH' )#80   
-
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['cashSales'])+'.00' )
-
-
+    l+=1
+    can.drawString(90, top-l*lSpace, 'INFLOW DETAILS' )#80   
     l+=1
     can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, '(A/C) ADVANCE')#80   
+    totalInflow=0
+    for flowIn in printData['cashInFlows']:
+        can.drawString(40, top-l*lSpace, "{:^12}".format( str(l-1)))
+        can.drawString(90, top-l*lSpace, flowIn['label']+( ' ('+ flowIn['info'] +')' if flowIn['info'] else ''))#80   
+        totalInflow+=flowIn['total']
+        can.drawRightString(450, top-l*lSpace, currencyFormater(flowIn['cash'])+'.00' )
+        can.drawRightString(570, top-l*lSpace, currencyFormater(flowIn['total'])+'.00' )
+        l+=1
 
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['acSalesCash'])+'.00' )
-
-    l+=1
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, '(A/C) PAYMENT RECEIVED' )#80   
-
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['cusPaymentSales'])+'.00' )
-
-    l+=1
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, 'CASH ORDER' )#80   
-
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['orderCash'])+'.00' )
-
-    l+=1
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, 'ORDER PAYMENT RECEIVED' )#80   
-
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['cusPaymentOrder'])+'.00' )
-
-    l+=1
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l)))
-    can.drawString(140, top-l*lSpace, 'OTHER INCOME CASH' )#80   
-
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['otherIncome'])+'.00' )
-    l+=1
-    can.drawRightString(530, top-l*lSpace,'_______________' )
+    
+    can.drawRightString(450, top-l*lSpace,'_____________' )
+    can.drawRightString(570, top-l*lSpace,'_____________' )
     
     l+=1
     can.setFont("Helvetica-Bold", 12)
-    can.drawString(140, top-l*lSpace, 'TOTAL CASH INFLOW' )#80   
+    can.drawString(100, top-l*lSpace, 'TOTAL INFLOW' )#80   
 
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['cashIn'])+'.00' )
+    can.drawRightString(450, top-l*lSpace, currencyFormater(printData['cashIn'])+'.00' )
+    can.drawRightString(570, top-l*lSpace, currencyFormater(totalInflow)+'.00' )
 
 
     l+=1
     l+=1
 
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l-3)))
-    can.drawString(140, top-l*lSpace, 'PAYMENT FOR CUSTOMER PURCHASE' )#80   
-
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['paidPurchase'])+'.00' )
-
-
-    # l+=1
-    # can.setFont("Helvetica", 12)
-    # can.drawString(80, top-l*lSpace, "{:^12}".format( str(l-3)))
-    # can.drawString(140, top-l*lSpace, 'PAID AS PURCHASE/ORDER BALANCE' )#80   
-
-    # can.drawRightString(520, top-l*lSpace, currencyFormater(printData['paidBalanceP_O'])+'.00' )
-
+    can.drawString(90, top-l*lSpace, 'OUTFLOW (PAID) DETAILS' )#80   
     l+=1
     can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l-3)))
-    can.drawString(140, top-l*lSpace, 'EXPENSE BY CASH' )#80   
+    totalOutflow=0
+    for flowIn in printData['cashOutFlows']:
+        can.drawString(40, top-l*lSpace, "{:^12}".format( str(l-5)))
+        can.drawString(90, top-l*lSpace, flowIn['label']+( ' ('+ flowIn['info'] +')' if flowIn['info'] else ''))#80   
+        totalOutflow+=flowIn['total']
+        can.drawRightString(450, top-l*lSpace, currencyFormater(flowIn['cash'])+'.00' )
+        can.drawRightString(570, top-l*lSpace, currencyFormater(flowIn['total'])+'.00' )
+        l+=1
 
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['expense'])+'.00' )
-
-    l+=1
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l-3)))
-    can.drawString(140, top-l*lSpace, 'BANK DEPOSIT' )#80   
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['bank'])+'.00' )
-
-    l+=1
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l-3)))
-    can.drawString(140, top-l*lSpace, 'OTHER SAVINGS' )#80   
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['otherSaving'])+'.00' )
-
-    l+=1
-    can.setFont("Helvetica", 12)
-    can.drawString(80, top-l*lSpace, "{:^12}".format( str(l-3)))
-    can.drawString(140, top-l*lSpace, 'OTHER PAYMENTS' )#80   
-
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['otherPayments'])+'.00' )
-    l+=1
-    can.drawRightString(530, top-l*lSpace,'_______________' )
+    
+    can.drawRightString(450, top-l*lSpace,'_____________' )
+    can.drawRightString(570, top-l*lSpace,'_____________' )
     
     l+=1
-    can.setFont("Helvetica-Bold", 12)
-    can.drawString(140, top-l*lSpace, 'TOTAL CASH OUTFLOW' )#80   
 
-    can.drawRightString(520, top-l*lSpace, currencyFormater(printData['cashOut'])+'.00' )
-   
+    can.setFont("Helvetica-Bold", 12)
+    can.drawString(100, top-l*lSpace, 'TOTAL OUTFLOW' )#80   
+
+    can.drawRightString(450, top-l*lSpace, currencyFormater(printData['cashOut'])+'.00' )
+    can.drawRightString(570, top-l*lSpace, currencyFormater(totalOutflow)+'.00' )
+
+
     l+=1
     can.setFont("Helvetica", 12)
-    can.drawRightString(530, top-l*lSpace,'_______________' )
+    can.drawRightString(450, top-l*lSpace,'_____________' )
+    can.drawRightString(570, top-l*lSpace,'_____________' )
    
     l+=1
     can.setFont("Helvetica-Bold", 13)
-    can.drawString(140, top-l*lSpace-5, 'EDNING BALANCE' )#80   
+    can.drawString(100, top-l*lSpace-5, 'CLOSING BALANCES' )#80   
 
-    can.drawRightString(520, top-l*lSpace-5, currencyFormater(printData['balance'])+'.00' )
+    can.drawRightString(450, top-l*lSpace-5, currencyFormater(printData['balance'])+'.00' )
+    can.drawRightString(570, top-l*lSpace-5, currencyFormater((printData['initialBalance'] if 'initialBalance' in printData else 0)+totalInflow-totalOutflow)+'.00' )
+
     can.setFont("Helvetica", 12)
+    can.drawRightString(450, top-l*lSpace-10,'_____________' )
+    can.drawRightString(450, top-l*lSpace-12,'_____________' )
+    can.drawRightString(570, top-l*lSpace-10,'_____________' )
+    can.drawRightString(570, top-l*lSpace-12,'_____________' )
 
-    can.drawRightString(530, top-l*lSpace-10,'_______________' )
-    can.drawRightString(530, top-l*lSpace-12,'_______________' )
-    
-            
-      
-
-
-        
 
     can.save()
 
