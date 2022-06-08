@@ -1,70 +1,89 @@
+from PyPDF2 import PdfFileWriter, PdfFileReader
+import io
 import os
-from fpdf import FPDF, HTMLMixin
+from functions import currencyFormater
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
-class PDF(FPDF, HTMLMixin):
-    pass
+
+dict ={
+    "Gold (Au)":'Au', 
+    "Copper (Cu)":'Cu',
+    "Silver (Ag)":'Ag',
+    "Indium (In)":'In',
+    "Zinc (Zn)":'Zn'
+}
 
 
 def SetPrintingJobCertificate(printData):
-    # class PDF(FPDF, HTMLMixin):
-    #     pass
 
-    data = (
-        ("ELEMENT", "CONC %", ),
-        ("Gold (Au)",'               '+printData['Au']+'%',),
-        ("Copper (Cu)", '               '+printData['Cu']+'%', ),
-        ("Silver (Ag)", '               '+printData['Ag']+'%', ),
-        ("Indium (In)", '               '+printData['In']+'%', ),
-        ("Zinc (Zn)", '               '+printData['Zn']+'%', ),
+    global dict
 
-    )
-    pdf = PDF()
-    pdf.set_font("Arial", size = 15)
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet, pagesize=letter)
 
-    pdf.add_page()
-    pdf.cell(0, 12, txt="" ,ln=1,align='L')
-    pdf.cell(0, 9, txt="" ,ln=1,align='L')
+    can.setFont("Helvetica-Bold", 11)
+    top =657
+    l=0
+    lSpace=17
+
+    can.drawString(60, top-l*lSpace, "Name")
+    can.drawString(105,  top-l*lSpace, ": "+printData['name'])
+
+    can.drawString(245,  top-l*lSpace, "Date")
+    can.drawString(285,  top-l*lSpace, ": "+printData['date'])
+
+    l+=1
+
+    can.drawString(60,  top-l*lSpace, "Sample")
+    can.drawString(105,  top-l*lSpace, ": "+printData['sample'])
 
 
-    pdf.set_left_margin(32)
+    can.drawString(245,  top-l*lSpace, "Time")
+    can.drawString(285,  top-l*lSpace, ": "+printData['time'])
 
-    pdf.write_html(
-        f"""<table border="1" ><thead><tr>
-        <th width="40%">{data[0][0]}</th>
-        <th width="25%">{data[0][1]}</th>    
-    </tr></thead><tbody><tr>
-        <td>{'</td><td>'.join(data[1])}</td>
-    </tr><tr>
-        <td>{'</td><td>'.join(data[2])}</td>
-    </tr><tr>
-        <td>{'</td><td>'.join(data[3])}</td>
-    </tr><tr>
-        <td>{'</td><td>'.join(data[4])}</td>
-    </tr><tr>
-        <td>{'</td><td>'.join(data[5])}</td>
-    </tr>
-    </tbody></table""",
-    )
-    pdf.set_left_margin(23)
-    pdf.cell(0, 5, txt="Weight      : "+printData['weight']+"g,    Karat : "+printData['karad']+'K',ln=1,align='L')
-    pdf.set_left_margin(23)
-    pdf.cell(0, 5, txt="{:<10} {:<40} ".format('Date   ' , "   : "+printData['date']) ,ln=1,align='L')
-    pdf.cell(0, 5, txt="{:<10} {:<40} ".format('Time  ' , "  : "+printData['time']) ,ln=1,align='L')
-    pdf.cell(0, 5, txt="{:<10} {:<40} ".format('Name  ' , " : "+printData['name']),ln=1,align='L')
-    pdf.cell(0, 5, txt="{:<10} {:<40} ".format('Sample' , " : "+printData['sample']),ln=1,align='L')
-    pdf.output('table.pdf', 'F')
-    os.system('lp ./table.pdf')
+    l+=1
 
-# SetPrintingJobCertificate({'date':'10-21',
-#                            'time':'20-33',
-#                             'name':'SHaganan', 
-#                             'sample':'Good',
-#                             "Au":'10%',
-#                             "Cu":'10%',
-#                             "Ag":'10%',
-#                             "In":'10%',
-#                             "Zn":'10%',
-#                             "weight":"10",
-#                             "karad":"22.5"
-#                             })
 
+    can.drawString(60,  top-l*lSpace, "Weight")
+    can.drawString(105,  top-l*lSpace, ": "+printData['weight']+'g')
+
+
+
+    can.drawString(245,  top-l*lSpace, "Karat")
+    can.drawString(285,  top-l*lSpace, ": "+printData['karad']+'K')
+
+
+    can.setFont("Helvetica", 11)
+    i=0
+    for (key, value) in dict.items():
+        y=585-i*17
+        i=i+1
+        # can.drawString(80, y, "{:^12}".format( str(i)))
+        can.drawString(60, y, key )#80
+        
+        can.drawString(280, y, printData[value]+'%')
+
+
+    can.save()
+
+    #move to the beginning of the StringIO buffer
+    packet.seek(0)
+
+    # create a new PDF with Reportlab
+    new_pdf = PdfFileReader(packet)
+    # read your existing PDF
+    existing_pdf = PdfFileReader(open("priyankaCert.pdf", "rb")) 
+    output = PdfFileWriter()
+    # add the "watermark" (which is the new pdf) on the existing page
+    page = existing_pdf.getPage(0)
+    page.mergePage(new_pdf.getPage(0))
+    output.addPage(page)
+    # finally, write "output" to a real file
+    outputStream = open("destination.pdf", "wb")
+    output.write(outputStream)
+    outputStream.close()
+    os.system('lp ./destination.pdf')
+
+
+#SetPrintingJobCertificate('')

@@ -1,8 +1,13 @@
 import os
+import time
+time.sleep(1)
+from wifiCheck import waitForInternet
+
 try :
     from firebase import Firebase
 except :
-    os.system('sudo pip3 install pyrebase firebase')
+    waitForInternet(4)
+    os.system('sudo pip3 install pyrebase==3.0.3 firebase==3.0.1')
     from firebase import Firebase
     print('Firebase Installed Again')
 
@@ -12,8 +17,7 @@ from dotMatrixPrinter import setDotMatrixPrinting
 from thermalPrinter import setThermalPrinting
 from labelPrinter import setLabelPrinting
 from certificatePrinter import SetPrintingJobCertificate
-from wifiCheck import waitForInternet
-import time
+
 
 config = {
         "apiKey": "AIzaSyAHiNXjCfRz_aQefCYoFglXo4ramCMcyIE",
