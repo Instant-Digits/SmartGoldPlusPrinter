@@ -21,7 +21,7 @@ from thermalPrinter import setThermalPrinting
 from labelPrinter import setLabelPrinting
 from InvoicePrinter import setPDFInvoicePrinter
 from cashflowPrinter import setStatementPrinter
-
+from detailsBookPrinter import setDetailBooktPrinter
 
 config = {
         "apiKey": "AIzaSyAHiNXjCfRz_aQefCYoFglXo4ramCMcyIE",
@@ -35,6 +35,8 @@ db = firebasecon.database()
 printers={}
 
 print ('System start')
+os.system('lprm -')
+print ('Pending Printing jobs are cleaned')
 
 waitForInternet(4)
 
@@ -50,9 +52,10 @@ except TypeError:
 
 firmIds =metaData['firmID'].split('@')
 
+lastCheckTime = time.time() #printer refresh
 
-
-def mainListener(message):     
+def mainListener(message):  
+    global lastCheckTime   
 
     if not (message['data']) :
         return 
@@ -63,6 +66,8 @@ def mainListener(message):
         if(data):  
             try :
                 setPDFInvoicePrinter(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -74,6 +79,8 @@ def mainListener(message):
         if(data):  
             try :
                 SetPrintingJobCertificate(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -86,6 +93,8 @@ def mainListener(message):
         if(data):  
             try :
                 SetPrintingJobReport(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -95,13 +104,30 @@ def mainListener(message):
     if  ('cashFlowPrinter' in metaData['config'] and (message['path']=='/cashFlowPrinter' or 'cashFlowPrinter' in message["data"])): 
         data=message["data"]  if message['path']=='/cashFlowPrinter' else message["data"]['cashFlowPrinter']
         if(data):  
+            # setStatementPrinter(data)
             try :
                 setStatementPrinter(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
 
             db.child(firmIds[0]+'/cashFlowPrinter').remove()
+
+    if  ('managePrinter' in metaData['config'] and (message['path']=='/managePrinter' or 'managePrinter' in message["data"])): 
+        data=message["data"]  if message['path']=='/managePrinter' else message["data"]['managePrinter']
+        if(data):  
+            # setDetailBooktPrinter(data)
+            try :
+                setDetailBooktPrinter(data)
+                lastCheckTime = time.time() #printer refresh
+
+                
+            except :
+                print('printer error')
+
+            db.child(firmIds[0]+'/managePrinter').remove()
 
 
     if  ('stockPrinter' in metaData['config'] and len(firmIds) ==1 and (message['path']=='/stockPrinter' or 'stockPrinter' in message["data"])): 
@@ -109,6 +135,8 @@ def mainListener(message):
         if(data):  
             try :
                 SetPrintingJobStock(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -124,6 +152,8 @@ if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
         if(data):  
             try:
                 SetPrintingJobStock(data)
+                lastCheckTime = time.time() #printer refresh
+
                 
             except :
                 print('printer error')
@@ -131,3 +161,19 @@ if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
     
     for firmId in firmIds:
         db.child(firmId+'/stockPrinter').stream(listener)
+
+
+
+
+#if ('printerRefresh' in metaData and metaData['printerRefresh']):
+print ('Printer Refresh')
+metaData['printerRefresh']= metaData['printerRefresh'] if 'printerRefresh' in metaData and metaData['printerRefresh'] else 25
+while (True):
+    if(time.time()>lastCheckTime+int(metaData['printerRefresh'])*60):
+        lastCheckTime = time.time()
+        os.system('lpstat -t')
+        print ('Printer Refresh')
+    time.sleep(60)
+        
+
+        
