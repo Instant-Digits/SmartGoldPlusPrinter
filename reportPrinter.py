@@ -1,5 +1,3 @@
-from PyPDF2 import PdfFileWriter, PdfFileReader
-import io
 import os
 from functions import currencyFormater,nameDecode
 from reportlab.pdfgen import canvas
@@ -11,7 +9,7 @@ from collections import OrderedDict
 def SetPrintingJobReport(printData):
 
  
-    pdf_file = 'report.pdf'
+    pdf_file = 'destination.pdf'
  
     can = canvas.Canvas(pdf_file)
 
@@ -524,7 +522,7 @@ def SetPrintingJobReport(printData):
 
     can.save()
 
-    os.system('lp ./report.pdf')
+    return 'destination.pdf'
 
 
 #SetPrintingJobCertificate('')

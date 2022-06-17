@@ -141,7 +141,7 @@ def setDetailBooktPrinter (printData ):
 
     #move to the beginning of the StringIO buffer
   
-    os.system('lp ./destination.pdf')
+    return 'destination.pdf'
 
 
 # from reportlab.pdfgen.canvas import Canvas

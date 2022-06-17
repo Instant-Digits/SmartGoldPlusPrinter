@@ -15,6 +15,8 @@ def setPDFInvoicePrinter (printData ):
     cusAdress =  printData['nameAddress'] if 'nameAddress' in printData else '--' 
 
    
+    
+    y=790 #790
 
     printValue = not(printData['hideValue']) if 'hideValue' in printData else True 
     
@@ -27,10 +29,12 @@ def setPDFInvoicePrinter (printData ):
 
     can.setFont("Helvetica", 11)
 
-    can.drawString(410, 820, "DATE")
-    can.drawString(450, 820, ": "+printData['date']+' '+ printData['time'][0:5] +' '+printData['time'][-2:])
+    y-=7
+    can.drawString(410, y, "DATE")
+    can.drawString(450, y, ": "+printData['date']+' '+ printData['time'][0:5] +' '+printData['time'][-2:])
 
-    can.drawString(440, 710, "No. : "+printData['invoiceSN'])
+    y=y-80
+    can.drawString(440, y, "No. : "+printData['invoiceSN'])
     # can.drawString(430, 4, ": "+printData['invoiceSN'])
 
     can.drawString(70, 638, "NAME  : "+printData['name'].upper())
@@ -196,10 +200,10 @@ def setPDFInvoicePrinter (printData ):
     page.mergePage(new_pdf.getPage(0))
     output.addPage(page)
     # finally, write "output" to a real file
-    outputStream = open("destination.pdf", "wb")
+    outputStream = open("invoice.pdf", "wb")
     output.write(outputStream)
     outputStream.close()
-    os.system('lp ./destination.pdf')
+    return('invoice.pdf')
 
 
 # from reportlab.pdfgen.canvas import Canvas

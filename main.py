@@ -8,21 +8,18 @@ except :
     from firebase import Firebase
     print('Firebase Installed Again')
 
-from certificatePrinter import SetPrintingJobCertificate
 
+from uuid import getnode as get_mac
+import time
+# from functions import configPrinter
+# from labelPrinter import setLabelPrinting
+from InvoicePrinter import setPDFInvoicePrinter
+from certificatePrinter import SetPrintingJobCertificate
 from reportPrinter import SetPrintingJobReport
 from stockPrinter import SetPrintingJobStock
-from uuid import getnode as get_mac
-import requests 
-import time
-from functions import configPrinter
-from dotMatrixPrinter import setDotMatrixPrinting
-from thermalPrinter import setThermalPrinting
-from labelPrinter import setLabelPrinting
-from InvoicePrinter import setPDFInvoicePrinter
 from cashflowPrinter import setStatementPrinter
 from detailsBookPrinter import setDetailBooktPrinter
-
+from GetPrinters import printPDF
 config = {
         "apiKey": "AIzaSyAHiNXjCfRz_aQefCYoFglXo4ramCMcyIE",
         "authDomain":  "smart-pos-plus-secondary.firebaseapp.com",
@@ -35,14 +32,14 @@ db = firebasecon.database()
 printers={}
 
 print ('System start')
-os.system('lprm -')
-print ('Pending Printing jobs are cleaned')
+
 
 waitForInternet(4)
 
 
+
+
 mac = get_mac()
-print ('Mac : '+str(mac))
 metaData=db.child('/Printers/'+str(mac)).get().val();
 try :
         metaData= dict(metaData)
@@ -65,7 +62,7 @@ def mainListener(message):
         data=message["data"]  if message['path']=='/invoicePrint' else message["data"]['invoicePrint']
         if(data):  
             try :
-                setPDFInvoicePrinter(data)
+                printPDF(setPDFInvoicePrinter(data))
                 lastCheckTime = time.time() #printer refresh
 
                 
@@ -78,7 +75,7 @@ def mainListener(message):
         data=message["data"]  if message['path']=='/certificatePrinter' else message["data"]['certificatePrinter']
         if(data):  
             try :
-                SetPrintingJobCertificate(data)
+                printPDF(SetPrintingJobCertificate(data))
                 lastCheckTime = time.time() #printer refresh
 
                 
@@ -92,7 +89,7 @@ def mainListener(message):
         data=message["data"]  if message['path']=='/reportPrinter' else message["data"]['reportPrinter']
         if(data):  
             try :
-                SetPrintingJobReport(data)
+                printPDF(SetPrintingJobReport(data))
                 lastCheckTime = time.time() #printer refresh
 
                 
@@ -106,7 +103,7 @@ def mainListener(message):
         if(data):  
             # setStatementPrinter(data)
             try :
-                setStatementPrinter(data)
+                printPDF(setStatementPrinter(data))
                 lastCheckTime = time.time() #printer refresh
 
                 
@@ -120,7 +117,7 @@ def mainListener(message):
         if(data):  
             # setDetailBooktPrinter(data)
             try :
-                setDetailBooktPrinter(data)
+                printPDF(setDetailBooktPrinter(data))
                 lastCheckTime = time.time() #printer refresh
 
                 
@@ -134,7 +131,7 @@ def mainListener(message):
         data=message["data"]  if message['path']=='/stockPrinter' else message["data"]['stockPrinter']
         if(data):  
             try :
-                SetPrintingJobStock(data)
+                printPDF(SetPrintingJobStock(data))
                 lastCheckTime = time.time() #printer refresh
 
                 
@@ -151,7 +148,7 @@ if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
         data=message["data"]        
         if(data):  
             try:
-                SetPrintingJobStock(data)
+                printPDF(SetPrintingJobStock(data))
                 lastCheckTime = time.time() #printer refresh
 
                 
@@ -168,12 +165,12 @@ if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
 #if ('printerRefresh' in metaData and metaData['printerRefresh']):
 print ('Printer Refresh')
 metaData['printerRefresh']= metaData['printerRefresh'] if 'printerRefresh' in metaData and metaData['printerRefresh'] else 25
-while (True):
-    if(time.time()>lastCheckTime+int(metaData['printerRefresh'])*60):
-        lastCheckTime = time.time()
-        os.system('lpstat -t')
-        print ('Printer Refresh')
-    time.sleep(60)
+# while (True):
+#     if(time.time()>lastCheckTime+int(metaData['printerRefresh'])*60):
+#         lastCheckTime = time.time()
+#         os.system('lpstat -t')
+#         print ('Printer Refresh')
+#     time.sleep(60)
         
 
         

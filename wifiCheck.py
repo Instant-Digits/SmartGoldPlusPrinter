@@ -1,7 +1,6 @@
 import os
 import time
 import urllib.request
-import os
 
 def waitForInternet(timeOut=5): #min
     timeStart = time.time()

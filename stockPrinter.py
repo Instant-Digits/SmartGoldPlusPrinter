@@ -11,13 +11,13 @@ from reportlab.lib.pagesizes import letter
 def SetPrintingJobStock(printData):
 
  
-    pdf_file = 'stockPDF.pdf'
+    pdf_file = 'destination.pdf'
  
     can = canvas.Canvas(pdf_file)
 
     
 
-    y=800
+    y=770 #800
     l =0
     lSpace=13
     page =1
@@ -117,7 +117,7 @@ def SetPrintingJobStock(printData):
 
     can.save()
 
-    os.system('lp ./stockPDF.pdf')
+    return('destination.pdf')
 
 
 #SetPrintingJobCertificate('')

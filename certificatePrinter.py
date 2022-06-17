@@ -76,7 +76,7 @@ def SetPrintingJobCertificate(printData):
     outputStream = open("destination.pdf", "wb")
     output.write(outputStream)
     outputStream.close()
-    os.system('lp ./destination.pdf')
+    return('destination.pdf')
 
 
 #SetPrintingJobCertificate('')

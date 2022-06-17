@@ -1,1 +1,4 @@
 pyrebase firebase 
+
+for windows 
+onWindows pip install reportlab==3.6.0
