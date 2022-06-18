@@ -16,7 +16,7 @@ if (platform.system()=='Windows'):
    
     while (printer_num<0):
         try :
-            printer_num =int(input("\nChoose a printer for all purpose except LABEL:\n\n"+"\n".join([f"{n} {p}" for n, p in enumerate(all_printers)])+"\n\n"+ colored('Select the option number and Press Enter : ', 'yellow')))
+            printer_num =int(input("\nChoose a printer for all purpose except LABEL:\n\n"+"\n".join([f"{n} {p}" for n, p in enumerate(all_printers)])+"\n\n"+ 'Select the option number and Press Enter : '))
         except:
             print('Input Error')
 
@@ -37,20 +37,20 @@ def printPDF(fileName):
             if not os.path.isdir(desktopOut):
                 os.system('mkdir '+desktopOut)
             os.system(r'copy '+fileName+ r' '+desktopOut)
-            print(colored('Pls find the '+fileName+' in the folder : Desktop/GoldPlusOutputs\n', 'green'))
+            print('Pls find the '+fileName+' in the folder : Desktop/GoldPlusOutputs\n\n')
             return
         # win32print.SetDefaultPrinter(all_printers[printer_num])
         
-        if 'invoice' in fileName:
-            win32api.ShellExecute(0, "print", cwd+'/'+fileName, '/d:"%s"' % all_printers[printer_num],  ".",  0)
+        # if 'invoice' in fileName:
+        win32api.ShellExecute(0, "print", cwd+'/'+fileName, '/d:"%s"' % all_printers[printer_num],  ".",  0)
 
-        else :
-            win32api.ShellExecute(0, 'open', GSPRINT_PATH, '-ghostscript "'+GHOSTSCRIPT_PATH+'" -dPDFFitPage -color -printer "'+all_printers[printer_num]+'" '+fileName+'"', '.', 0)
+        # else :
+        #     win32api.ShellExecute(0, 'open', GSPRINT_PATH, '-ghostscript "'+GHOSTSCRIPT_PATH+'" -dPDFFitPage -color -printer "'+all_printers[printer_num]+'" '+fileName+'"', '.', 0)
 
         # os.system('start cmd /c "timeout 1 & taskkill /f /im Acrobat.exe"')
         # os.system("Acrobat.exe /t "+fileName+" "+ all_printers[printer_num])
         
-        print(colored(fileName+' is set to be printed\n', 'green'))
+        print(fileName+' is set to be printed\n\n')
         
 
     else :
