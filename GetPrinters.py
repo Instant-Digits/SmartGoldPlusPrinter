@@ -2,14 +2,15 @@ import os
 import platform
 from glob import glob
 import shutil
-
+cwdForward = os.getcwd()
+cwd = cwdForward.replace('\\','/')
 
 if (platform.system()=='Windows'):
     import win32api
     import win32print
     from termcolor import colored
-    GHOSTSCRIPT_PATH = r"C:\Users\Next\Desktop\Instant Digits\gold\SmartPosPrinters\GHOSTSCRIPT\bin\gswin32.exe"
-    GSPRINT_PATH = r"C:\Users\Next\Desktop\Instant Digits\gold\SmartPosPrinters\GSPRINT\gsprint.exe"
+    GHOSTSCRIPT_PATH = cwdForward+r"\GHOSTSCRIPT\bin\gswin32.exe"
+    GSPRINT_PATH = cwdForward+r"\GSPRINT\gsprint.exe"
     printer_num =-1
     all_printers = ['None - Dont do anything Just run the server','Generate PDF Only' ]+[ printer[2] for printer in win32print.EnumPrinters(2)]
    
@@ -22,8 +23,7 @@ if (platform.system()=='Windows'):
     
     
     
-cwd = os.getcwd()
-cwd = cwd.replace('\\','/')
+
 
 
 def printPDF(fileName):   

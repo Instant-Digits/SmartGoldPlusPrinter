@@ -1,4 +1,4 @@
 pyrebase firebase 
 
 for windows 
-onWindows pip install reportlab==3.6.0
+onWindows pip install reportlab==3.6.0 PyPDF2
