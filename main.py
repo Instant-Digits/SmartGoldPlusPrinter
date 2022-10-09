@@ -20,6 +20,7 @@ from stockPrinter import SetPrintingJobStock
 from cashflowPrinter import setStatementPrinter
 from detailsBookPrinter import setDetailBooktPrinter
 from GetPrinters import printPDF
+from stockStatementPrinter import setStockStatementPrinter
 config = {
         "apiKey": "AIzaSyAHiNXjCfRz_aQefCYoFglXo4ramCMcyIE",
         "authDomain":  "smart-pos-plus-secondary.firebaseapp.com",
@@ -41,10 +42,15 @@ waitForInternet(4)
 
 mac = get_mac()
 metaData=db.child('/Printers/'+str(mac)).get().val();
+
 try :
         metaData= dict(metaData)
 except TypeError:
         print ('Invalued config')
+        print ('ID : '+str(mac))
+        print ('if you are a new user, pls contact Instant Digits +9471 999 2075')
+        while(True):
+            time.sleep(10000)
 
 
 firmIds =metaData['firmID'].split('@')
@@ -61,6 +67,7 @@ def mainListener(message):
     if  ('invoicePrinter' in metaData['config'] and (message['path']=='/invoicePrint' or 'invoicePrint' in message["data"])): #or 'invoicePrint' in message["data"] 
         data=message["data"]  if message['path']=='/invoicePrint' else message["data"]['invoicePrint']
         if(data):  
+            # printPDF(setPDFInvoicePrinter(data))
             try :
                 printPDF(setPDFInvoicePrinter(data))
                 lastCheckTime = time.time() #printer refresh
@@ -140,6 +147,21 @@ def mainListener(message):
 
             db.child(firmIds[0]+'/stockPrinter').remove()
 
+    if  ('stockStatement' in metaData['config'] and (message['path']=='/stockStatement' or 'stockStatement' in message["data"])): #or 'stockStatement' in message["data"] 
+        data=message["data"]  if message['path']=='/stockStatement' else message["data"]['stockStatement']
+        if(data):  
+            #printPDF(setStockStatementPrinter(data))
+            
+            try :
+                printPDF(setStockStatementPrinter(data))
+                lastCheckTime = time.time() #printer refresh
+
+                
+            except :
+                print('printer error')
+
+            db.child(firmIds[0]+'/stockStatement').remove()
+
 
 db.child(firmIds[0]).stream(mainListener)
 
@@ -163,7 +185,7 @@ if ('stockPrinter' in metaData['config'] and len(firmIds) >1):
 
 
 #if ('printerRefresh' in metaData and metaData['printerRefresh']):
-print ('Printer Refresh')
+print ('Everthing Ready for printing Jobs')
 metaData['printerRefresh']= metaData['printerRefresh'] if 'printerRefresh' in metaData and metaData['printerRefresh'] else 25
 # while (True):
 #     if(time.time()>lastCheckTime+int(metaData['printerRefresh'])*60):

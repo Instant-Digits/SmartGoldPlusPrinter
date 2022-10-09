@@ -30,7 +30,7 @@ def SetPrintingJobStock(printData):
     l+=1
 
     for (key, value) in printData.items():
-        if (y-l*lSpace-lSpace<0):
+        if (y-l*lSpace-5*lSpace<0):
             can.showPage()
             y=800
             l =0
@@ -45,7 +45,7 @@ def SetPrintingJobStock(printData):
             can.drawString(60, y-l*lSpace, nameDecode(key)+ '  : '+ currencyFormater(value['qts'])+'  || W : '+ currencyFormater(value['weight'])+'g')
             l+=1
             for (key2, value2) in value.items():
-                if (y-l*lSpace-lSpace<0):
+                if (y-l*lSpace-5*lSpace<0):
                     can.showPage()
                     y=800
                     l =0
@@ -64,7 +64,7 @@ def SetPrintingJobStock(printData):
                     
                     for (key3, value3) in value2.items():
                         
-                        if (y-l*lSpace-lSpace<0):
+                        if (y-l*lSpace-5*lSpace<0):
                             can.showPage()
                             y=800
                             l =0
@@ -87,7 +87,7 @@ def SetPrintingJobStock(printData):
                                 can.setFont("Helvetica", 10)
                                 id=0
                                 while (id< len(value3['ids'])):
-                                    if (y-l*lSpace-2*lSpace<0):
+                                    if (y-l*lSpace-5*lSpace<0):
                                         can.showPage()
                                         y=800
                                         l =0
@@ -123,19 +123,3 @@ def SetPrintingJobStock(printData):
 #SetPrintingJobCertificate('')
 
 
-def create_pdf():
-    pdf_file = 'multipage.pdf'
- 
-    can = canvas.Canvas(pdf_file)
- 
-    can.drawString(20, 800, "First Page")
-    can.showPage()
- 
-    can.drawString(20, 800, "Second Page")
-    can.showPage()
- 
-    can.drawString(20, 700, "Third Page")
-    can.showPage()
- 
-    can.save()
- 

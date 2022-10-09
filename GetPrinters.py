@@ -16,7 +16,7 @@ if (platform.system()=='Windows'):
    
     while (printer_num<0):
         try :
-            printer_num =int(input("\nChoose a printer for all purpose except LABEL:\n\n"+"\n".join([f"{n} {p}" for n, p in enumerate(all_printers)])+"\n\n"+ 'Select the option number and Press Enter : '))
+            printer_num = int(input("\nChoose a printer for all purpose except LABEL:\n\n"+"\n".join([f"{n} {p}" for n, p in enumerate(all_printers)])+"\n\n"+ 'Select the option number and Press Enter : '))
         except:
             print('Input Error')
 

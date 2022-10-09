@@ -279,12 +279,14 @@ def SetPrintingJobReport(printData):
                     can.drawString(535, y-l*lSpace, 'PAYMENT')        
                     l+=1
                 try :
-                    value2['weight'] = value2['netWeight'] if ('netWeight' in value2 and float(value2['netWeight'])>float(value2['weight']) )else value2['weight']
+                    printWeight = ('K'+value2['karad']+'| '+'A'+value2['actWeight']+'| '+ value2['weight']) if ('actWeight' in value2  ) else value2['weight']
                 except :
-                    value2['weight']='0.000'
-
-                can.drawString(R3, y-l*lSpace, (value2['label'][:30] + '..') if len(value2['label']) > 30 else value2['label'] )        
-                can.drawRightString(400, y-l*lSpace, value2['weight']+'g' if (float(value2['weight'])>0) else 'N.A')
+                    printWeight='0.000'
+                can.setFont("Helvetica", 8)   
+                can.drawString(R3, y-l*lSpace, (value2['label'][:28] + '..') if len(value2['label']) > 28 else value2['label'] )        
+                             
+                can.drawRightString(415, y-l*lSpace,printWeight )
+                can.setFont("Helvetica", 10)
                 can.drawRightString(465, y-l*lSpace, currencyFormater(value2['unitPrice']))
                 totalUnitPrice =totalUnitPrice+int(value2['unitPrice'])
                 invLine+=1
